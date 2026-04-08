@@ -4,18 +4,17 @@ from flask import Flask, Response, redirect, render_template, request
 
 from s3_web_browser.s3 import list_objects, parse_responses
 
+all_buckets = [{"name": "evolution-x"}]
 
 def register_routes(app: Flask) -> None:  # noqa:C901
     @app.route("/", methods=["GET"])
     def index() -> str:
         s3 = boto3.resource("s3", **app.config["AWS_KWARGS"])
-        all_buckets = s3.buckets.all()
         return render_template("index.html", buckets=all_buckets)
 
     @app.route("/buckets")
     def buckets() -> str:
         s3 = boto3.resource("s3", **app.config["AWS_KWARGS"])
-        all_buckets = s3.buckets.all()
         return render_template("index.html", buckets=all_buckets)
 
     @app.route("/search/buckets/<bucket_name>", defaults={"path": ""})
