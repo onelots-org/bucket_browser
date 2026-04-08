@@ -85,14 +85,40 @@
     <div class="file-date">—</div>
     <div class="file-action"></div>
     {% else %}
-    <div class="file-name">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-      </svg>
+      {% set fname = item.name.rsplit('/', 1)[-1] %}
+      {% set ext = fname.rsplit('.', 1)[-1] | lower if '.' in fname else '' %}
+      <div class="file-name">
+        {% if ext in ('zip', 'tar', 'gz', 'rar', '7z', 'bz2', 'xz', 'tgz') %}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fb923c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
+          </svg>
+        {% elif ext in ('img', 'iso') %}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="7" y="7" width="10" height="10" rx="1"/>
+            <line x1="9" y1="7" x2="9" y2="4"/><line x1="12" y1="7" x2="12" y2="4"/><line x1="15" y1="7" x2="15" y2="4"/>
+            <line x1="9" y1="20" x2="9" y2="17"/><line x1="12" y1="20" x2="12" y2="17"/><line x1="15" y1="20" x2="15" y2="17"/>
+            <line x1="7" y1="9" x2="4" y2="9"/><line x1="7" y1="12" x2="4" y2="12"/><line x1="7" y1="15" x2="4" y2="15"/>
+            <line x1="20" y1="9" x2="17" y2="9"/><line x1="20" y1="12" x2="17" y2="12"/><line x1="20" y1="15" x2="17" y2="15"/>
+          </svg>
+        {% elif ext in ('sha256sum', 'sha256', 'sha1', 'sha512', 'md5', 'checksums') %}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a3e635" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+        {% elif ext in ('json', 'sh') %}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+          </svg>
+        {% else %}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+          </svg>
+        {% endif %}
       <a href="{{ url_for('download_file', bucket_name=bucket_name, path=item.name) }}" target="_blank" title="{{ item.name }}">
-        {{ item.name.rsplit('/', 1)[-1] }}
-      </a>
-    </div>
+      {{ fname }}
+    </a>
+  </div>
+
     <div class="file-size">{{ item.size }}</div>
     <div class="file-date">{{ item.date_modified }}</div>
     <div class="file-action">
