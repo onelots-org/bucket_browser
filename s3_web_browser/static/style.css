@@ -199,6 +199,16 @@ header .logo:hover { color: var(--accent); }
   gap: 8px;
   min-width: 0;
 }
+
+@media screen and (max-width: 500px) {
+  .file-table-header, .file-row {
+    grid-template-columns: 110px 90px 150px 68px;
+  }
+  .file-name {
+    min-width: 110px;
+  }
+}
+
 .file-name a {
   color: var(--text);
   text-decoration: none;
