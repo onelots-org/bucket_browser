@@ -4,7 +4,14 @@ from flask import Flask, Response, redirect, render_template, request
 
 from s3_web_browser.s3 import list_objects, parse_responses
 
-all_buckets = [{"name": "evolution-x"}]
+all_buckets = [
+        {
+            "name": "evolution-x"
+        },
+        {
+            "name": "lineageos"
+        }
+    ]
 
 def register_routes(app: Flask) -> None:  # noqa:C901
     @app.route("/", methods=["GET"])
