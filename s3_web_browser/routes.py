@@ -4,17 +4,25 @@ from flask import Flask, Response, redirect, render_template, request
 
 from s3_web_browser.s3 import list_objects, parse_responses
 
-ROOT_BUCKET = "onelots-builds"
+ROOT_BUCKET = "onelots-builds-bucket"
 
 def register_routes(app: Flask) -> None:  # noqa:C901
+    @app.context_processor
+    def inject_globals() -> dict:
+        return {"ROOT_BUCKET": ROOT_BUCKET}
+
     @app.route("/", methods=["GET"])
     def root_index() -> str:
-        return view_bucket(ROOT_BUCKET, "")
-
-    @app.route("/buckets")
-    def buckets() -> str:
-        s3 = boto3.resource("s3", **app.config["AWS_KWARGS"])
-        return render_template("index.html", buckets=all_buckets)
+        s3_client = boto3.client("s3", **app.config["AWS_KWARGS"])
+        response = s3_client.list_objects_v2(
+            Bucket=ROOT_BUCKET,
+            Delimiter="/",
+        )
+        prefixes = response.get("CommonPrefixes", [])
+        virtual_buckets = [
+            {"name": p["Prefix"].rstrip("/")} for p in prefixes
+        ]
+        return render_template("index.html", buckets=virtual_buckets)
 
     @app.route("/search/buckets/<bucket_name>", defaults={"path": ""})
     @app.route("/search/buckets/<bucket_name>/<path:path>")
