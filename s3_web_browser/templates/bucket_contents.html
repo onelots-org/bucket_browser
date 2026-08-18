@@ -3,22 +3,16 @@
 {# ── Breadcrumb ── #}
 <nav class="breadcrumb">
   <a href="{{ url_for('root_index') }}">Buckets</a>
-  <span class="sep">/</span>
-  {% if path %}
-    <a href="{{ url_for('view_bucket', bucket_name=bucket_name) }}">{{ bucket_name }}</a>
-    {% set parts = path.rstrip('/').split('/') %}
-    {% for part in parts %}
-      <span class="sep">/</span>
-      {% set part_path = parts[:loop.index] | join('/') + '/' %}
-      {% if loop.last %}
-        <span class="current">{{ part }}</span>
-      {% else %}
-        <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=part_path) }}">{{ part }}</a>
-      {% endif %}
-    {% endfor %}
-  {% else %}
-    <span class="current">{{ bucket_name }}</span>
-  {% endif %}
+  {% set parts = path.rstrip('/').split('/') if path else [] %}
+  {% for part in parts %}
+    <span class="sep">/</span>
+    {% set part_path = parts[:loop.index] | join('/') + '/' %}
+    {% if loop.last %}
+      <span class="current">{{ part }}</span>
+    {% else %}
+      <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=part_path) }}">{{ part }}</a>
+    {% endif %}
+  {% endfor %}
 </nav>
 
 {# ── Search ── #}
