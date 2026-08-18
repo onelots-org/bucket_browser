@@ -2,7 +2,7 @@
 
 {# ── Breadcrumb ── #}
 <nav class="breadcrumb">
-  <a href="{{ url_for('index') }}">Buckets</a>
+  <a href="{{ url_for('root_index') }}">Buckets</a>
   <span class="sep">/</span>
   {% if path %}
     <a href="{{ url_for('view_bucket', bucket_name=bucket_name) }}">{{ bucket_name }}</a>

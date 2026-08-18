@@ -4,20 +4,12 @@ from flask import Flask, Response, redirect, render_template, request
 
 from s3_web_browser.s3 import list_objects, parse_responses
 
-all_buckets = [
-        {
-            "name": "evolution-x"
-        },
-        {
-            "name": "lineageos"
-        }
-    ]
+ROOT_BUCKET = "onelots-builds"
 
 def register_routes(app: Flask) -> None:  # noqa:C901
     @app.route("/", methods=["GET"])
-    def index() -> str:
-        s3 = boto3.resource("s3", **app.config["AWS_KWARGS"])
-        return render_template("index.html", buckets=all_buckets)
+    def root_index() -> str:
+        return view_bucket(ROOT_BUCKET, "")
 
     @app.route("/buckets")
     def buckets() -> str:
@@ -164,3 +156,7 @@ def register_routes(app: Flask) -> None:  # noqa:C901
             ExpiresIn=3600,
         )  # URL expires in 1 hour
         return redirect(url)
+
+    @app.route("/<path:path>")
+    def index_path(path: str) -> str:
+        return view_bucket(ROOT_BUCKET, path)
