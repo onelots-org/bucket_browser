@@ -43,6 +43,20 @@ def folder_order(name: str) -> tuple:
     return (1, [], base.lower())
 
 
+def file_entry(obj: dict, now: dt.datetime) -> S3Entry:
+    return S3Entry(
+        name=obj["Key"],
+        type="file",
+        size=humanize.naturalsize(obj["Size"]).replace("Bytes", "B").replace("Byte", "B"),
+        date_modified=obj["LastModified"].strftime("%Y-%m-%d %H:%M UTC"),
+        age=humanize.naturaltime(now - obj["LastModified"]),
+    )
+
+
+def file_order(entry: S3Entry) -> tuple:
+    return (not entry.name.lower().endswith(".zip"), entry.name.lower())
+
+
 def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, search: str = "") -> list[S3Entry]:
     params = {"Bucket": bucket, "Prefix": path}
     if not search:
@@ -61,17 +75,9 @@ def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, 
                 folders.add(path + rel.split("/", 1)[0] + "/")
             if key.endswith("/") or search not in rel.lower():
                 continue
-            files.append(
-                S3Entry(
-                    name=key,
-                    type="file",
-                    size=humanize.naturalsize(obj["Size"]).replace("Bytes", "B").replace("Byte", "B"),
-                    date_modified=obj["LastModified"].strftime("%Y-%m-%d %H:%M UTC"),
-                    age=humanize.naturaltime(now - obj["LastModified"]),
-                )
-            )
+            files.append(file_entry(obj, now))
 
     entries = [S3Entry(name=f, type="folder") for f in folders if search in f[len(path) :].lower()]
     entries.sort(key=lambda e: folder_order(e.name))
-    files.sort(key=lambda e: (not e.name.lower().endswith(".zip"), e.name.lower()))
+    files.sort(key=file_order)
     return entries + files
