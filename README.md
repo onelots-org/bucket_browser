@@ -14,6 +14,7 @@ Onelots builds bucket.
 - **Device catalog**: each ROM lists the latest build of every device, with its build history.
 - **File browser**: breadcrumb navigation, recursive search and pagination for everything else.
 - **Downloads**: files redirect to 1-hour presigned URLs, `.json` files are served directly for OTA clients.
+- **Download counter**: zip downloads are counted in SQLite, bots and OTA checks excluded.
 - **ROM logos**: drop a `s3_web_browser/static/rom-<folder>.png` to show it on the home page.
 
 Builds are detected from the bucket layout `<rom>/<device>/<android>/<version>/<YYYYMMDD>/<file>`.
@@ -31,6 +32,8 @@ All configuration is done via environment variables (or a `.env` file):
 | `AWS_ENDPOINT_URL` | — | Custom S3 endpoint |
 | `DEBUG` | `False` | Flask debug mode |
 | `PAGE_ITEMS` | `300` | Items per page |
+| `DB_PATH` | `data/downloads.sqlite3` | Download counter database, kept in the `downloads` Docker volume |
+| `SITE_URL` | `https://downloads.onelots.org` | Public URL used in link previews |
 
 See `.env.example` for a template.
 
