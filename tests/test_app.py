@@ -5,7 +5,7 @@ from unittest import mock
 import botocore.exceptions
 import pytest
 
-from s3_web_browser import create_app, s3
+from s3_web_browser import create_app, downloads, s3
 
 KEYS = [
     "a/",
@@ -75,9 +75,16 @@ def fake():
 
 
 @pytest.fixture
-def client(fake):
+def app(fake, tmp_path):
     with mock.patch("boto3.client", return_value=fake):
-        return create_app().test_client()
+        app = create_app()
+    app.config["DB_PATH"] = str(tmp_path / "downloads.sqlite3")
+    return app
+
+
+@pytest.fixture
+def client(app):
+    return app.test_client()
 
 
 def get(client, url):
@@ -284,6 +291,22 @@ def test_json_is_served_directly(client):
     assert r.mimetype == "application/json"
     r, _ = get(client, "/download/buckets/onelots-builds-bucket/missing.json")
     assert r.status_code == 404
+
+
+def test_downloads_are_counted(app, client):
+    url = "/download/buckets/onelots-builds-bucket/a/x.zip"
+    client.get(url)
+    client.get(url)
+    client.head(url)
+    client.get(url, headers={"User-Agent": "Mozilla/5.0 (compatible; Discordbot/2.0)"})
+    client.get("/download/buckets/onelots-builds-bucket/a/sub/deep/z.json")
+    assert downloads.download_counts(app.config["DB_PATH"]) == {"a/x.zip": 2}
+
+
+def test_download_survives_a_broken_counter(app, client):
+    app.config["DB_PATH"] = "/dev/null/downloads.sqlite3"
+    r, _ = get(client, "/download/buckets/onelots-builds-bucket/a/x.zip")
+    assert r.status_code == 302
 
 
 def test_other_files_redirect_to_s3(client):

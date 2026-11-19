@@ -9,3 +9,5 @@ env/
 
 # Local environment variables
 .env
+
+data/

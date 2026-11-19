@@ -1,3 +1,5 @@
+import re
+import sqlite3
 import zlib
 from pathlib import Path, PurePosixPath
 
@@ -5,9 +7,12 @@ import boto3
 import botocore
 from flask import Flask, Response, redirect, render_template, request, url_for
 
+from s3_web_browser.downloads import count_download
 from s3_web_browser.s3 import list_builds, list_entries
 
 ROOT_BUCKET = "onelots-builds-bucket"
+
+BOTS = re.compile(r"bot|crawl|spider|slurp|facebookexternalhit|embedly|preview", re.IGNORECASE)
 
 ROM_NAMES = {"lineageos": "LineageOS", "evolution-x": "Evolution X"}
 
@@ -154,6 +159,11 @@ def register_routes(app: Flask) -> None:  # noqa:C901
                     return Response("Not found\n", status=404, mimetype="text/plain")
                 raise
             return Response(obj["Body"].read(), mimetype="application/json", headers={"Cache-Control": "no-cache"})
+        if request.method == "GET" and not BOTS.search(request.headers.get("User-Agent", "")):
+            try:
+                count_download(app.config["DB_PATH"], path)
+            except (sqlite3.Error, OSError):
+                app.logger.exception("Could not count the download of %s", path)
         url = s3_client.generate_presigned_url(
             "get_object",
             Params={"Bucket": bucket_name, "Key": path},

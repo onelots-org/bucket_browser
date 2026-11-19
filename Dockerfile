@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir poetry==$POETRY_VERSION \
 
 COPY . /usr/src/app/
 
-RUN usermod --home /tmp nobody
+RUN usermod --home /tmp nobody && mkdir -p data && chown nobody data
 USER nobody
 
 ENV PYTHONPATH=/usr/src/app

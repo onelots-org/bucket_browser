@@ -19,6 +19,8 @@ class Config:  # noqa: D101
     if AWS_ENDPOINT_URL:
         AWS_KWARGS["endpoint_url"] = AWS_ENDPOINT_URL
 
+    DB_PATH = os.getenv("DB_PATH", "data/downloads.sqlite3")
+
     SITE_URL = os.getenv("SITE_URL", "https://downloads.onelots.org")
 
     SEND_FILE_MAX_AGE_DEFAULT = 365 * 24 * 3600
