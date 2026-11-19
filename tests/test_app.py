@@ -13,6 +13,8 @@ KEYS = [
     "a/sub/y.img",
     "a/sub/deep/z.json",
     "a/Other/w.txt",
+    "b/boot.img",
+    "b/rom.zip",
     *(f"many/f{i:04}.zip" for i in range(2500)),
 ]
 DATE = dt.datetime(2026, 1, 1, tzinfo=dt.UTC)
@@ -132,6 +134,11 @@ def test_listings_are_cached(client, fake):
     get(client, "/a/")
     get(client, "/a/?page=2")
     assert fake.listings == 1
+
+
+def test_zips_come_first(client):
+    _, html = get(client, "/b/")
+    assert html.index("rom.zip") < html.index("boot.img")
 
 
 def test_folder_order():

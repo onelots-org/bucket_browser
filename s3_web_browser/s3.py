@@ -73,5 +73,5 @@ def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, 
 
     entries = [S3Entry(name=f, type="folder") for f in folders if search in f[len(path) :].lower()]
     entries.sort(key=lambda e: folder_order(e.name))
-    files.sort(key=lambda e: e.name.lower())
+    files.sort(key=lambda e: (not e.name.lower().endswith(".zip"), e.name.lower()))
     return entries + files
