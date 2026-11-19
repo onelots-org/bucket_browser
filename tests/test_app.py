@@ -19,11 +19,13 @@ KEYS = [
     "rom/dev1/17/24.0/20261111/boot.img",
     "rom/dev1/17/24.0/20261105/rom-20261105-dev1.zip",
     "rom/dev2/16/23.2/20260901/boot.img",
+    "rom/dev3/17/24.0/20261101/rom-20261101-dev3.zip",
     "rom/OTA_UPDATES/17/dev1.json",
     "rom/dev1/17/24.0/notes.txt",
     *(f"many/f{i:04}.zip" for i in range(2500)),
 ]
 DATE = dt.datetime(2026, 1, 1, tzinfo=dt.UTC)
+UPLOADED = {"rom/dev3/17/24.0/20261101/rom-20261101-dev3.zip": dt.datetime(2026, 1, 2, tzinfo=dt.UTC)}
 
 
 def client_error(code):
@@ -47,7 +49,7 @@ class FakeS3:
             if Delimiter and "/" in rel:
                 prefixes.add(Prefix + rel.split("/", 1)[0] + "/")
             else:
-                contents.append({"Key": key, "Size": 1234, "LastModified": DATE})
+                contents.append({"Key": key, "Size": 1234, "LastModified": UPLOADED.get(key, DATE)})
         for i in range(0, max(len(contents), 1), 1000):
             yield {
                 "Contents": contents[i : i + 1000],
@@ -90,7 +92,8 @@ def test_index(client):
     assert "2500 items" in html
     assert 'src="/static/rom-' not in html
     assert 'href="/roms/rom/"' in html
-    assert "2 devices" in html
+    assert "3 devices" in html
+    assert html.index("rom-20261101-dev3.zip") < html.index("rom-20261111-dev1.zip")
     assert 'href="/buckets/onelots-builds-bucket/many/"' in html
     assert "Latest releases" in html
     assert 'href="/roms/rom/dev1/" class="release-name"' in html
@@ -178,12 +181,17 @@ def test_folder_order():
 
 def test_list_builds(fake):
     builds = s3.list_builds(fake, "bucket", "rom")
-    assert [(b.device, b.date) for b in builds] == [("dev1", "20261111"), ("dev1", "20261105"), ("dev2", "20260901")]
+    assert [(b.device, b.date) for b in builds] == [
+        ("dev1", "20261111"),
+        ("dev1", "20261105"),
+        ("dev3", "20261101"),
+        ("dev2", "20260901"),
+    ]
     latest = builds[0]
     assert (latest.android, latest.version, latest.day) == ("17", "24.0", "2026-11-11")
     assert latest.zip.name == "rom/dev1/17/24.0/20261111/rom-20261111-dev1.zip"
     assert [f.name.rsplit("/", 1)[-1] for f in latest.files] == ["rom-20261111-dev1.zip", "boot.img"]
-    assert builds[2].zip is None
+    assert builds[3].zip is None
 
 
 def test_rom_devices(client):

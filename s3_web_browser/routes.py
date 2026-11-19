@@ -95,7 +95,7 @@ def register_routes(app: Flask) -> None:  # noqa:C901
             for build in builds[rom]:
                 if build.zip:
                     latest.setdefault((rom, build.device), {"rom": rom, "logo": rom in logos, "build": build})
-        releases = sorted(latest.values(), key=lambda r: r["build"].date, reverse=True)[:6]
+        releases = sorted(latest.values(), key=lambda r: r["build"].zip.date_modified, reverse=True)[:6]
         return render_template("index.html", buckets=virtual_buckets, releases=releases)
 
     @app.route("/roms/<rom>/")
