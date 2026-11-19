@@ -1,5 +1,6 @@
 import dataclasses
 import datetime as dt
+import re
 import time
 
 import botocore
@@ -81,3 +82,36 @@ def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, 
     entries.sort(key=lambda e: folder_order(e.name))
     files.sort(key=file_order)
     return entries + files
+
+
+@dataclasses.dataclass(frozen=True)
+class Build:
+    """A dated build of a device, laid out as rom/device/android/version/YYYYMMDD/."""
+
+    device: str
+    android: str
+    version: str
+    date: str
+    files: tuple[S3Entry, ...]
+
+    @property
+    def zip(self) -> S3Entry | None:
+        return self.files[0] if self.files[0].name.endswith(".zip") else None
+
+    @property
+    def day(self) -> str:
+        return f"{self.date[:4]}-{self.date[4:6]}-{self.date[6:]}"
+
+
+BUILD_KEY = re.compile(r"[^/]+/([^/]+)/([^/]+)/([^/]+)/(\d{8})/[^/]+")
+
+
+def list_builds(s3_client: botocore.client.BaseClient, bucket: str, rom: str) -> list[Build]:
+    now = dt.datetime.now(dt.UTC)
+    files: dict[tuple[str, ...], list[S3Entry]] = {}
+    for page in list_pages(s3_client, Bucket=bucket, Prefix=f"{rom}/"):
+        for obj in page.get("Contents", []):
+            if match := BUILD_KEY.fullmatch(obj["Key"]):
+                files.setdefault(match.groups(), []).append(file_entry(obj, now))
+    builds = [Build(*key, files=tuple(sorted(entries, key=file_order))) for key, entries in files.items()]
+    return sorted(builds, key=lambda b: (b.date, folder_order(b.version)), reverse=True)

@@ -15,6 +15,12 @@ KEYS = [
     "a/Other/w.txt",
     "b/boot.img",
     "b/rom.zip",
+    "rom/dev1/17/24.0/20261111/rom-20261111-dev1.zip",
+    "rom/dev1/17/24.0/20261111/boot.img",
+    "rom/dev1/17/24.0/20261105/rom-20261105-dev1.zip",
+    "rom/dev2/16/23.2/20260901/boot.img",
+    "rom/OTA_UPDATES/17/dev1.json",
+    "rom/dev1/17/24.0/notes.txt",
     *(f"many/f{i:04}.zip" for i in range(2500)),
 ]
 DATE = dt.datetime(2026, 1, 1, tzinfo=dt.UTC)
@@ -155,6 +161,16 @@ def test_folder_order():
         "A/",
         "b/",
     ]
+
+
+def test_list_builds(fake):
+    builds = s3.list_builds(fake, "bucket", "rom")
+    assert [(b.device, b.date) for b in builds] == [("dev1", "20261111"), ("dev1", "20261105"), ("dev2", "20260901")]
+    latest = builds[0]
+    assert (latest.android, latest.version, latest.day) == ("17", "24.0", "2026-11-11")
+    assert latest.zip.name == "rom/dev1/17/24.0/20261111/rom-20261111-dev1.zip"
+    assert [f.name.rsplit("/", 1)[-1] for f in latest.files] == ["rom-20261111-dev1.zip", "boot.img"]
+    assert builds[2].zip is None
 
 
 def test_s3_errors(client):
