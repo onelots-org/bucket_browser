@@ -318,8 +318,8 @@ def test_download_counts_are_shown(client):
     client.get("/download/buckets/onelots-builds-bucket/rom/dev1/17/24.0/20261111/boot.img")
     _, html = get(client, "/roms/rom/dev1/")
     assert "1,234 downloads &middot; newest first" in html
-    assert "Android 17 &middot; 1,233 downloads" in html
-    assert "Android 17 &middot; 1 download<" in html
+    assert "1,233 downloads &middot; " in html
+    assert "Android 17 &middot;" not in html
     assert "1 download &middot; " in html
     _, html = get(client, "/roms/rom/")
     assert "1,234 downloads" in html

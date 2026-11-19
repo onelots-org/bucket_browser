@@ -21,7 +21,7 @@
   <details class="build"{% if loop.first %} open{% endif %}>
     <summary>
       <span class="build-date"{% if build.zip %} title="{{ build.zip.date_modified }}"{% endif %}>{{ build.day }}</span>
-      <span class="build-meta">{{ build.version }} &middot; Android {{ build.android }}{% if build.zip and downloaded.get(build.zip.name) %} &middot; {{ downloaded[build.zip.name] | downloads }}{% endif %}</span>
+      <span class="build-meta">{{ build.version }} &middot; Android {{ build.android }}</span>
       {% if loop.first %}<span class="badge">Latest</span>{% endif %}
       {% if build.zip %}
       <span class="build-size">{{ build.zip.size }}</span>
