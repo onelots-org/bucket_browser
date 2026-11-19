@@ -5,7 +5,7 @@ import boto3
 import botocore
 from flask import Flask, Response, redirect, render_template, request, url_for
 
-from s3_web_browser.s3 import list_entries
+from s3_web_browser.s3 import list_builds, list_entries
 
 ROOT_BUCKET = "onelots-builds-bucket"
 
@@ -75,6 +75,32 @@ def register_routes(app: Flask) -> None:  # noqa:C901
             for p in prefixes
         ]
         return render_template("index.html", buckets=virtual_buckets)
+
+    @app.route("/roms/<rom>/")
+    def rom_devices(rom: str) -> str | Response:
+        builds = list_builds(s3_client, ROOT_BUCKET, rom)
+        if not builds:
+            return redirect(url_for("view_bucket", bucket_name=ROOT_BUCKET, path=f"{rom}/"))
+        latest: dict = {}
+        counts: dict = {}
+        for build in builds:
+            latest.setdefault(build.device, build)
+            counts[build.device] = counts.get(build.device, 0) + 1
+        return render_template(
+            "devices.html",
+            rom=rom,
+            path=rom,
+            logo=rom in logos,
+            devices=sorted(latest.values(), key=lambda b: b.device.lower()),
+            counts=counts,
+        )
+
+    @app.route("/roms/<rom>/<device>/")
+    def device_builds(rom: str, device: str) -> str | tuple[str, int]:
+        builds = [b for b in list_builds(s3_client, ROOT_BUCKET, rom) if b.device == device]
+        if not builds:
+            return render_template("error.html", error="No builds found for this device."), 404
+        return render_template("builds.html", rom=rom, device=device, path=f"{rom}/{device}", builds=builds)
 
     @app.route("/search/buckets/<bucket_name>", defaults={"path": ""})
     @app.route("/search/buckets/<bucket_name>/<path:path>")

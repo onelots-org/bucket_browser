@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<nav class="breadcrumb">
+  <a href="{{ url_for('root_index') }}">Buckets</a>
+  <span class="sep">/</span>
+  <span class="current">{{ rom }}</span>
+</nav>
+
+<div class="page-head">
+  <h1 class="page-title">
+    {% if logo %}
+    <img src="/static/rom-{{ rom }}.png?v={{ ASSET_VER }}" width="48" height="24" alt="">
+    {% endif %}
+    {{ rom }}
+  </h1>
+  <a href="{{ url_for('view_bucket', bucket_name=ROOT_BUCKET, path=rom + '/') }}" class="btn btn-ghost"><svg class="ic ic-sm"><use href="#i-folder"/></svg>Browse files</a>
+</div>
+<p class="page-subtitle">{{ devices | length }} device{{ '' if devices | length == 1 else 's' }} &middot; latest build of each</p>
+
+<div class="device-grid">
+  {% for build in devices %}
+  <article class="device-card">
+    <a href="{{ url_for('device_builds', rom=rom, device=build.device) }}" class="device-name">{{ build.device }}</a>
+    <p class="device-meta">{{ build.version }} &middot; Android {{ build.android }}</p>
+    <p class="device-meta"{% if build.zip %} title="{{ build.zip.date_modified }}"{% endif %}>{{ build.day }}{% if build.zip %} &middot; {{ build.zip.age }} &middot; {{ build.zip.size }}{% endif %}</p>
+    <div class="device-actions">
+      {% if build.zip %}
+      <a href="{{ url_for('download_file', bucket_name=ROOT_BUCKET, path=build.zip.name) }}" target="_blank" class="btn btn-primary"><svg class="ic ic-sm"><use href="#i-download"/></svg>Download</a>
+      {% endif %}
+      <a href="{{ url_for('device_builds', rom=rom, device=build.device) }}" class="btn btn-ghost">{{ counts[build.device] }} build{{ '' if counts[build.device] == 1 else 's' }}</a>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -173,6 +173,35 @@ def test_list_builds(fake):
     assert builds[2].zip is None
 
 
+def test_rom_devices(client):
+    r, html = get(client, "/roms/rom/")
+    assert r.status_code == 200
+    assert html.index("dev1") < html.index("dev2")
+    assert "2 builds" in html
+    assert "1 build<" in html
+    assert "rom-20261111-dev1.zip" in html
+    assert "rom-20261105-dev1.zip" not in html
+
+
+def test_device_builds(client):
+    r, html = get(client, "/roms/rom/dev1/")
+    assert r.status_code == 200
+    assert html.index("2026-11-11") < html.index("2026-11-05")
+    assert html.count("Latest") == 1
+    assert "boot.img" in html
+
+
+def test_unknown_device(client):
+    r, _ = get(client, "/roms/rom/nope/")
+    assert r.status_code == 404
+
+
+def test_rom_without_builds_falls_back_to_folders(client):
+    r, _ = get(client, "/roms/a/")
+    assert r.status_code == 302
+    assert r.headers["Location"].endswith("/buckets/onelots-builds-bucket/a/")
+
+
 def test_s3_errors(client):
     r, html = get(client, "/buckets/missing")
     assert r.status_code == 404
