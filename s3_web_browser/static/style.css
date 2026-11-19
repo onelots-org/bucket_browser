@@ -24,7 +24,7 @@
   --accent:      #6159f0;
   --accent-h:    #5a52e6;
   --link:        #8079ff;
-  --accent-glow: rgba(108,99,255,0.25);
+  --accent-glow: color-mix(in srgb, var(--accent) 25%, transparent);
   --green:       #4ade80;
   --folder:      #f59e0b;
   --danger:      #f87171;
@@ -67,7 +67,7 @@ body {
 
 /* ── Header ── */
 header {
-  background: rgba(13,13,15,0.85);
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -217,7 +217,7 @@ header .logo:hover { color: var(--link); }
   transition: background var(--transition);
 }
 .file-row:last-child { border-bottom: none; }
-.file-row:hover { background: rgba(108,99,255,0.07); }
+.file-row:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); }
 
 .file-name {
   display: flex;
@@ -357,7 +357,7 @@ header .logo:hover { color: var(--link); }
   background: var(--surface-2);
   box-shadow: 0 0 20px var(--accent-glow);
 }
-.bucket-card svg { color: var(--folder); flex-shrink: 0; filter: drop-shadow(0 0 4px rgba(245,158,11,0.3)); }
+.bucket-card svg { color: var(--folder); flex-shrink: 0; filter: drop-shadow(0 0 4px color-mix(in srgb, var(--folder) 30%, transparent)); }
 .bucket-card .ic, .bucket-card img { width: 48px; height: 24px; flex-shrink: 0; object-fit: contain; }
 .bucket-card span {
   font-size: 13px;
@@ -474,7 +474,7 @@ header .logo:hover { color: var(--link); }
   font-size: 11px;
   font-weight: 600;
   color: var(--green);
-  background: rgba(74,222,128,0.1);
+  background: color-mix(in srgb, var(--green) 10%, transparent);
 }
 .build-files { list-style: none; border-top: 1px solid var(--border); padding: 6px 0; }
 .build-files li {
@@ -502,15 +502,15 @@ header .logo:hover { color: var(--link); }
 /* ── Error card ── */
 .error-card {
   background: var(--surface);
-  border: 1px solid rgba(248,113,113,0.3);
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
   border-radius: var(--radius);
   padding: 32px;
   text-align: center;
   max-width: 480px;
   margin: 64px auto;
-  box-shadow: 0 0 24px rgba(248,113,113,0.08);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--danger) 8%, transparent);
 }
-.error-card svg { color: var(--danger); margin-bottom: 12px; filter: drop-shadow(0 0 8px rgba(248,113,113,0.4)); }
+.error-card svg { color: var(--danger); margin-bottom: 12px; filter: drop-shadow(0 0 8px color-mix(in srgb, var(--danger) 40%, transparent)); }
 .error-card h1 { font-size: 16px; margin-bottom: 8px; }
 .error-card p { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
 
