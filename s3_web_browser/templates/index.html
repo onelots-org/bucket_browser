@@ -21,6 +21,24 @@
   </a>
   {% endfor %}
 </div>
+
+{% if releases %}
+<h2 class="section-title">Latest releases</h2>
+<div class="release-list">
+  {% for release in releases %}
+  {% set build = release.build %}
+  <div class="release">
+    {% if release.logo %}
+    <img src="/static/rom-{{ release.rom }}.png?v={{ ASSET_VER }}" width="32" height="16" alt="">
+    {% endif %}
+    <a href="{{ url_for('device_builds', rom=release.rom, device=build.device) }}" class="release-name">{{ build.device }}</a>
+    <span class="release-meta" title="{{ build.zip.date_modified }}">{{ release.rom | rom_name }} {{ build.version }} &middot; {{ build.zip.age }}</span>
+    <span class="build-size">{{ build.zip.size }}</span>
+    <a href="{{ url_for('download_file', bucket_name=ROOT_BUCKET, path=build.zip.name) }}" target="_blank" class="btn btn-primary"><svg aria-hidden="true" class="ic ic-sm"><use href="#i-download"/></svg>Download</a>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
 {% else %}
 <div class="empty">
   <svg aria-hidden="true" class="ic ic-xl"><use href="#i-db"/></svg>

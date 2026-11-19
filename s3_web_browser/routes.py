@@ -79,17 +79,24 @@ def register_routes(app: Flask) -> None:  # noqa:C901
             Bucket=ROOT_BUCKET,
             Delimiter="/",
         )
-        prefixes = response.get("CommonPrefixes", [])
+        roms = [p["Prefix"].rstrip("/") for p in response.get("CommonPrefixes", [])]
+        builds = {rom: list_builds(s3_client, ROOT_BUCKET, rom) for rom in roms}
         virtual_buckets = [
             {
-                "name": p["Prefix"].rstrip("/"),
-                "count": len(list_entries(s3_client, ROOT_BUCKET, p["Prefix"])),
-                "devices": len({b.device for b in list_builds(s3_client, ROOT_BUCKET, p["Prefix"].rstrip("/"))}),
-                "logo": p["Prefix"].rstrip("/") in logos,
+                "name": rom,
+                "count": len(list_entries(s3_client, ROOT_BUCKET, f"{rom}/")),
+                "devices": len({b.device for b in builds[rom]}),
+                "logo": rom in logos,
             }
-            for p in prefixes
+            for rom in roms
         ]
-        return render_template("index.html", buckets=virtual_buckets)
+        latest: dict = {}
+        for rom in roms:
+            for build in builds[rom]:
+                if build.zip:
+                    latest.setdefault((rom, build.device), {"rom": rom, "logo": rom in logos, "build": build})
+        releases = sorted(latest.values(), key=lambda r: r["build"].date, reverse=True)[:6]
+        return render_template("index.html", buckets=virtual_buckets, releases=releases)
 
     @app.route("/roms/<rom>/")
     def rom_devices(rom: str) -> str | Response:

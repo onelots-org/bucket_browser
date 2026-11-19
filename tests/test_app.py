@@ -88,10 +88,14 @@ def test_index(client):
     assert r.status_code == 200
     assert "many" in html
     assert "2500 items" in html
-    assert "rom-" not in html
+    assert 'src="/static/rom-' not in html
     assert 'href="/roms/rom/"' in html
     assert "2 devices" in html
     assert 'href="/buckets/onelots-builds-bucket/many/"' in html
+    assert "Latest releases" in html
+    assert 'href="/roms/rom/dev1/" class="release-name"' in html
+    assert "rom-20261111-dev1.zip" in html
+    assert "rom-20261105-dev1.zip" not in html
 
 
 def test_browse_lists_one_level(client, fake):
