@@ -3,7 +3,7 @@
 <nav class="breadcrumb">
   <a href="{{ url_for('root_index') }}">Downloads</a>
   <span class="sep">/</span>
-  <span class="current">{{ rom }}</span>
+  <span class="current">{{ rom | rom_name }}</span>
 </nav>
 
 <div class="page-head">
@@ -11,7 +11,7 @@
     {% if logo %}
     <img src="/static/rom-{{ rom }}.png?v={{ ASSET_VER }}" width="48" height="24" alt="">
     {% endif %}
-    {{ rom }}
+    {{ rom | rom_name }}
   </h1>
   <a href="{{ url_for('view_bucket', bucket_name=ROOT_BUCKET, path=rom + '/') }}" class="btn btn-ghost"><svg class="ic ic-sm"><use href="#i-folder"/></svg>Browse files</a>
 </div>

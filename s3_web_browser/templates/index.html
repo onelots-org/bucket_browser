@@ -12,7 +12,7 @@
     {% else %}
     <svg class="ic ic-lg"><use href="#i-folder"/></svg>
     {% endif %}
-    <span title="{{ bucket.name }}">{{ bucket.name }}</span>
+    <span title="{{ bucket.name }}">{{ bucket.name | rom_name }}</span>
     {% if bucket.devices %}
     <small>{{ bucket.devices }} device{{ '' if bucket.devices == 1 else 's' }}</small>
     {% else %}

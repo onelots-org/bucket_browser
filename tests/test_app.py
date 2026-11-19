@@ -151,6 +151,12 @@ def test_zips_come_first(client):
     assert html.index("rom.zip") < html.index("boot.img")
 
 
+def test_rom_names(client):
+    with mock.patch.dict("s3_web_browser.routes.ROM_NAMES", {"rom": "Some ROM"}):
+        _, html = get(client, "/roms/rom/")
+    assert "Some ROM" in html
+
+
 def test_folder_order():
     names = ["b/", "17/", "24.0/", "A/", "20261027/", "20261111/", "16/", "9.1/", "24.1/"]
     assert sorted(names, key=s3.folder_order) == [

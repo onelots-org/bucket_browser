@@ -3,7 +3,7 @@
 <nav class="breadcrumb">
   <a href="{{ url_for('root_index') }}">Downloads</a>
   <span class="sep">/</span>
-  <a href="{{ url_for('rom_devices', rom=rom) }}">{{ rom }}</a>
+  <a href="{{ url_for('rom_devices', rom=rom) }}">{{ rom | rom_name }}</a>
   <span class="sep">/</span>
   <span class="current">{{ device }}</span>
 </nav>

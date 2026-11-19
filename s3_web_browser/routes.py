@@ -9,6 +9,8 @@ from s3_web_browser.s3 import list_builds, list_entries
 
 ROOT_BUCKET = "onelots-builds-bucket"
 
+ROM_NAMES = {"lineageos": "LineageOS", "evolution-x": "Evolution X"}
+
 KINDS = {
     **dict.fromkeys(("zip", "tar", "gz", "rar", "7z", "bz2", "xz", "tgz"), "archive"),
     **dict.fromkeys(("img", "iso"), "image"),
@@ -33,6 +35,10 @@ def register_routes(app: Flask) -> None:  # noqa:C901
     @app.context_processor
     def inject_globals() -> dict:
         return {"ROOT_BUCKET": ROOT_BUCKET, "ASSET_VER": asset_ver}
+
+    @app.template_filter()
+    def rom_name(rom: str) -> str:
+        return ROM_NAMES.get(rom, rom)
 
     @app.template_filter()
     def kind(name: str) -> str:
