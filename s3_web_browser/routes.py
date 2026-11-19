@@ -7,7 +7,7 @@ import boto3
 import botocore
 from flask import Flask, Response, redirect, render_template, request, url_for
 
-from s3_web_browser.downloads import count_download
+from s3_web_browser.downloads import count_download, download_counts
 from s3_web_browser.s3 import list_builds, list_entries
 
 ROOT_BUCKET = "onelots-builds-bucket"
@@ -40,6 +40,17 @@ def register_routes(app: Flask) -> None:  # noqa:C901
     @app.context_processor
     def inject_globals() -> dict:
         return {"ROOT_BUCKET": ROOT_BUCKET, "ASSET_VER": asset_ver, "SITE_URL": app.config["SITE_URL"]}
+
+    def zip_downloads() -> dict[str, int]:
+        try:
+            return download_counts(app.config["DB_PATH"])
+        except (sqlite3.Error, OSError):
+            app.logger.exception("Could not read the download counts")
+            return {}
+
+    @app.template_filter()
+    def downloads(count: int) -> str:
+        return f"{count:,} download{'' if count == 1 else 's'}"
 
     @app.template_filter()
     def rom_name(rom: str) -> str:
@@ -110,9 +121,12 @@ def register_routes(app: Flask) -> None:  # noqa:C901
             return redirect(url_for("view_bucket", bucket_name=ROOT_BUCKET, path=f"{rom}/"))
         latest: dict = {}
         counts: dict = {}
+        totals: dict = {}
+        downloaded = zip_downloads()
         for build in builds:
             latest.setdefault(build.device, build)
             counts[build.device] = counts.get(build.device, 0) + 1
+            totals[build.device] = totals.get(build.device, 0) + (downloaded.get(build.zip.name, 0) if build.zip else 0)
         return render_template(
             "devices.html",
             rom=rom,
@@ -120,6 +134,7 @@ def register_routes(app: Flask) -> None:  # noqa:C901
             logo=rom in logos,
             devices=sorted(latest.values(), key=lambda b: b.device.lower()),
             counts=counts,
+            totals=totals,
         )
 
     @app.route("/roms/<rom>/<device>/")
@@ -127,7 +142,16 @@ def register_routes(app: Flask) -> None:  # noqa:C901
         builds = [b for b in list_builds(s3_client, ROOT_BUCKET, rom) if b.device == device]
         if not builds:
             return redirect(url_for("view_bucket", bucket_name=ROOT_BUCKET, path=f"{rom}/{device}/"))
-        return render_template("builds.html", rom=rom, device=device, path=f"{rom}/{device}", builds=builds)
+        downloaded = zip_downloads()
+        return render_template(
+            "builds.html",
+            rom=rom,
+            device=device,
+            path=f"{rom}/{device}",
+            builds=builds,
+            downloaded=downloaded,
+            total=sum(downloaded.get(b.zip.name, 0) for b in builds if b.zip),
+        )
 
     @app.route("/roms/<rom>/<device>/latest")
     def latest_build(rom: str, device: str) -> Response | tuple[str, int]:

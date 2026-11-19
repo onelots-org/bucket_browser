@@ -303,6 +303,25 @@ def test_downloads_are_counted(app, client):
     assert downloads.download_counts(app.config["DB_PATH"]) == {"a/x.zip": 2}
 
 
+def test_download_counts_are_shown(client):
+    zip_url = "/download/buckets/onelots-builds-bucket/rom/dev1/17/24.0/{}/rom-{}-dev1.zip"
+    for _ in range(1233):
+        client.get(zip_url.format("20261111", "20261111"))
+    client.get(zip_url.format("20261105", "20261105"))
+    _, html = get(client, "/roms/rom/dev1/")
+    assert "1,234 downloads &middot; newest first" in html
+    assert "Android 17 &middot; 1,233 downloads" in html
+    assert "Android 17 &middot; 1 download<" in html
+    _, html = get(client, "/roms/rom/")
+    assert "1,234 downloads" in html
+    assert "0 downloads" not in html
+
+
+def test_counts_survive_a_broken_counter(app, client):
+    app.config["DB_PATH"] = "/dev/null/downloads.sqlite3"
+    assert get(client, "/roms/rom/dev1/")[0].status_code == 200
+
+
 def test_download_survives_a_broken_counter(app, client):
     app.config["DB_PATH"] = "/dev/null/downloads.sqlite3"
     r, _ = get(client, "/download/buckets/onelots-builds-bucket/a/x.zip")

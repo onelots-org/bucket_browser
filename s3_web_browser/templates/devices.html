@@ -27,7 +27,7 @@
   {% for build in devices %}
   <article class="device-card" data-device="{{ build.device | lower }}">
     <a href="{{ url_for('device_builds', rom=rom, device=build.device) }}" class="device-name">{{ build.device }}</a>
-    <p class="device-meta">{{ build.version }} &middot; Android {{ build.android }}</p>
+    <p class="device-meta">{{ build.version }} &middot; Android {{ build.android }}{% if totals[build.device] %} &middot; {{ totals[build.device] | downloads }}{% endif %}</p>
     <p class="device-meta"{% if build.zip %} title="{{ build.zip.date_modified }}"{% endif %}>{{ build.day }}{% if build.zip %} &middot; {{ build.zip.age }} &middot; {{ build.zip.size }}{% endif %}</p>
     <div class="device-actions">
       {% if build.zip %}

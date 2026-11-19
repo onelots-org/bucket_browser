@@ -14,14 +14,14 @@
   <h1 class="page-title">{{ device }}</h1>
   <a href="{{ url_for('view_bucket', bucket_name=ROOT_BUCKET, path=rom + '/' + device + '/') }}" class="btn btn-ghost"><svg aria-hidden="true" class="ic ic-sm"><use href="#i-folder"/></svg>Browse files</a>
 </div>
-<p class="page-subtitle">{{ builds | length }} build{{ '' if builds | length == 1 else 's' }} &middot; newest first &middot; <a href="{{ url_for('latest_build', rom=rom, device=device) }}">link to the latest build</a></p>
+<p class="page-subtitle">{{ builds | length }} build{{ '' if builds | length == 1 else 's' }}{% if total %} &middot; {{ total | downloads }}{% endif %} &middot; newest first &middot; <a href="{{ url_for('latest_build', rom=rom, device=device) }}">link to the latest build</a></p>
 
 <div class="build-list">
   {% for build in builds %}
   <details class="build"{% if loop.first %} open{% endif %}>
     <summary>
       <span class="build-date"{% if build.zip %} title="{{ build.zip.date_modified }}"{% endif %}>{{ build.day }}</span>
-      <span class="build-meta">{{ build.version }} &middot; Android {{ build.android }}</span>
+      <span class="build-meta">{{ build.version }} &middot; Android {{ build.android }}{% if build.zip and downloaded.get(build.zip.name) %} &middot; {{ downloaded[build.zip.name] | downloads }}{% endif %}</span>
       {% if loop.first %}<span class="badge">Latest</span>{% endif %}
       {% if build.zip %}
       <span class="build-size">{{ build.zip.size }}</span>
