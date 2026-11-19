@@ -20,6 +20,7 @@ def register_routes(app: Flask) -> None:  # noqa:C901
     s3_client = boto3.client("s3", **app.config["AWS_KWARGS"])
     page_items = app.config["PAGE_ITEMS"]
     static = Path(app.static_folder)
+    logos = {f.stem.removeprefix("rom-") for f in static.glob("rom-*.png")}
     asset_ver = f"{zlib.crc32(b''.join(f.read_bytes() for f in sorted(static.iterdir()))):08x}"
 
     @app.context_processor
@@ -55,7 +56,11 @@ def register_routes(app: Flask) -> None:  # noqa:C901
         )
         prefixes = response.get("CommonPrefixes", [])
         virtual_buckets = [
-            {"name": p["Prefix"].rstrip("/"), "count": len(list_entries(s3_client, ROOT_BUCKET, p["Prefix"]))}
+            {
+                "name": p["Prefix"].rstrip("/"),
+                "count": len(list_entries(s3_client, ROOT_BUCKET, p["Prefix"])),
+                "logo": p["Prefix"].rstrip("/") in logos,
+            }
             for p in prefixes
         ]
         return render_template("index.html", buckets=virtual_buckets)

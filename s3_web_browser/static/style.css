@@ -366,6 +366,7 @@ header .logo:hover { color: var(--accent); }
   box-shadow: 0 0 20px var(--accent-glow);
 }
 .bucket-card svg { color: var(--folder); flex-shrink: 0; filter: drop-shadow(0 0 4px rgba(245,158,11,0.3)); }
+.bucket-card .ic, .bucket-card img { width: 48px; height: 24px; flex-shrink: 0; object-fit: contain; }
 .bucket-card span {
   font-size: 13px;
   font-weight: 500;
