@@ -200,13 +200,15 @@ header .logo:hover { color: var(--accent); }
   min-width: 0;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
+  .page { padding: 16px 16px 32px; }
+  header { padding: 0 16px; }
   .file-table-header, .file-row {
-    grid-template-columns: 110px 90px 150px 68px;
+    grid-template-columns: 1fr 72px 64px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
-  .file-name {
-    min-width: 110px;
-  }
+  .file-table-header > :nth-child(3), .file-date { display: none; }
 }
 
 .file-name a {
