@@ -29,7 +29,7 @@ def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, 
             rel = key[len(path) :]
             if search and "/" in rel:
                 folders.add(path + rel.split("/", 1)[0] + "/")
-            if key.endswith("/") or search not in key.lower():
+            if key.endswith("/") or search not in rel.lower():
                 continue
             files.append(
                 S3Entry(
@@ -40,7 +40,7 @@ def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, 
                 )
             )
 
-    entries = [S3Entry(name=f, type="folder") for f in folders if search in f.lower()]
+    entries = [S3Entry(name=f, type="folder") for f in folders if search in f[len(path) :].lower()]
     entries.sort(key=lambda e: e.name.lower())
     files.sort(key=lambda e: e.name.lower())
     return entries + files
