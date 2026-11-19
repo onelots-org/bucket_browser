@@ -215,6 +215,9 @@ def test_breadcrumb_links_to_catalog(client):
 
 def test_embeds(client):
     _, html = get(client, "/roms/rom/dev1/")
+    assert '<meta property="og:title" content="dev1 · rom — Onelots">' in html
+    assert "Latest rom build for dev1: 24.0 (Android 17) from 2026-11-11" in html
+    assert '<meta property="og:url" content="https://downloads.onelots.org/roms/rom/dev1/">' in html
     assert '<meta name="twitter:card" content="summary_large_image">' in html
     assert "https://downloads.onelots.org/static/og.jpg?v=" in html
 

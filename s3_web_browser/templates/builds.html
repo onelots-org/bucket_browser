@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% block title %}{{ device }} · {{ rom | rom_name }} — Onelots{% endblock %}
+{% block description %}{% set latest = builds[0] %}Latest {{ rom | rom_name }} build for {{ device }}: {{ latest.version }} (Android {{ latest.android }}) from {{ latest.day }}{% if latest.zip %}, {{ latest.zip.size }}{% endif %}. {{ builds | length }} build{{ '' if builds | length == 1 else 's' }} available.{% endblock %}
 {% block content %}
 <nav class="breadcrumb">
   <a href="{{ url_for('root_index') }}">Downloads</a>

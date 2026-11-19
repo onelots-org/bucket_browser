@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% block title %}{{ rom | rom_name }} builds — Onelots{% endblock %}
+{% block description %}Latest {{ rom | rom_name }} builds for {{ devices | length }} device{{ '' if devices | length == 1 else 's' }}: {{ devices | map(attribute='device') | join(', ') }}.{% endblock %}
 {% block content %}
 <nav class="breadcrumb">
   <a href="{{ url_for('root_index') }}">Downloads</a>
