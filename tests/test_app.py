@@ -205,6 +205,15 @@ def test_unknown_device(client):
     assert r.status_code == 404
 
 
+def test_unknown_folder(client):
+    r, html = get(client, "/nope/")
+    assert r.status_code == 404
+    assert "does not exist" in html
+    r, html = get(client, "/search/buckets/onelots-builds-bucket/a/?search=nothing")
+    assert r.status_code == 200
+    assert "No results" in html
+
+
 def test_rom_without_builds_falls_back_to_folders(client):
     r, _ = get(client, "/roms/a/")
     assert r.status_code == 302

@@ -50,8 +50,10 @@ def register_routes(app: Flask) -> None:  # noqa:C901
         status, msg = ERRORS.get(code, (502, f"An unknown error occurred: {code}"))
         return render_template("error.html", error=msg), status
 
-    def render_listing(bucket_name: str, path: str, search: str = "") -> str:
+    def render_listing(bucket_name: str, path: str, search: str = "") -> str | tuple[str, int]:
         contents = list_entries(s3_client, bucket_name, path, search)
+        if path and not search and not contents:
+            return render_template("error.html", error="This page does not exist."), 404
         total_pages = max(1, -(-len(contents) // page_items))
         page = max(1, min(request.args.get("page", 1, type=int), total_pages))
         return render_template(
@@ -111,12 +113,12 @@ def register_routes(app: Flask) -> None:  # noqa:C901
 
     @app.route("/search/buckets/<bucket_name>", defaults={"path": ""})
     @app.route("/search/buckets/<bucket_name>/<path:path>")
-    def search_bucket(bucket_name: str, path: str) -> str:
+    def search_bucket(bucket_name: str, path: str) -> str | tuple[str, int]:
         return render_listing(bucket_name, path, request.args.get("search", ""))
 
     @app.route("/buckets/<bucket_name>", defaults={"path": ""})
     @app.route("/buckets/<bucket_name>/<path:path>")
-    def view_bucket(bucket_name: str, path: str) -> str | Response:
+    def view_bucket(bucket_name: str, path: str) -> str | Response | tuple[str, int]:
         if search := request.args.get("search", ""):
             return redirect(url_for("search_bucket", bucket_name=bucket_name, path=path, search=search))
         return render_listing(bucket_name, path)
@@ -140,5 +142,5 @@ def register_routes(app: Flask) -> None:  # noqa:C901
         return redirect(url)
 
     @app.route("/<path:path>")
-    def index_path(path: str) -> str | Response:
+    def index_path(path: str) -> str | Response | tuple[str, int]:
         return view_bucket(ROOT_BUCKET, path)
