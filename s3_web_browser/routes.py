@@ -117,6 +117,13 @@ def register_routes(app: Flask) -> None:  # noqa:C901
             return redirect(url_for("view_bucket", bucket_name=ROOT_BUCKET, path=f"{rom}/{device}/"))
         return render_template("builds.html", rom=rom, device=device, path=f"{rom}/{device}", builds=builds)
 
+    @app.route("/roms/<rom>/<device>/latest")
+    def latest_build(rom: str, device: str) -> Response | tuple[str, int]:
+        zips = [b.zip for b in list_builds(s3_client, ROOT_BUCKET, rom) if b.device == device and b.zip]
+        if not zips:
+            return render_template("error.html", error="No build found for this device."), 404
+        return redirect(url_for("download_file", bucket_name=ROOT_BUCKET, path=zips[0].name))
+
     @app.route("/search/buckets/<bucket_name>", defaults={"path": ""})
     @app.route("/search/buckets/<bucket_name>/<path:path>")
     def search_bucket(bucket_name: str, path: str) -> str | tuple[str, int]:

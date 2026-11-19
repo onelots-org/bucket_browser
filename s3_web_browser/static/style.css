@@ -373,6 +373,7 @@ header .logo:hover { color: var(--link); }
   font-family: var(--font-mono);
   margin-bottom: 20px;
 }
+.page-subtitle a { color: var(--link); }
 
 .page-head {
   display: flex;

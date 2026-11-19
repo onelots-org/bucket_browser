@@ -200,6 +200,17 @@ def test_device_builds(client):
     assert "boot.img" in html
 
 
+def test_latest_build(client):
+    r, _ = get(client, "/roms/rom/dev1/latest")
+    assert r.status_code == 302
+    assert r.headers["Location"].endswith(
+        "/download/buckets/onelots-builds-bucket/rom/dev1/17/24.0/20261111/rom-20261111-dev1.zip"
+    )
+    assert get(client, "/roms/rom/dev2/latest")[0].status_code == 404
+    _, html = get(client, "/roms/rom/dev1/")
+    assert 'href="/roms/rom/dev1/latest"' in html
+
+
 def test_device_without_builds_falls_back_to_folders(client):
     r, _ = get(client, "/roms/rom/nope/")
     assert r.status_code == 302
