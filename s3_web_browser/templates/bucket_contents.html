@@ -48,12 +48,6 @@
 
 {# ── File listing ── #}
 {% if contents %}
-{% set kinds = {
-  'zip': 'archive', 'tar': 'archive', 'gz': 'archive', 'rar': 'archive', '7z': 'archive', 'bz2': 'archive', 'xz': 'archive', 'tgz': 'archive',
-  'img': 'image', 'iso': 'image',
-  'sha256sum': 'sum', 'sha256': 'sum', 'sha1': 'sum', 'sha512': 'sum', 'md5': 'sum', 'checksums': 'sum',
-  'json': 'code', 'sh': 'code',
-} %}
 <div class="file-table">
   <div class="file-table-header">
     <div>Name</div>
@@ -74,7 +68,7 @@
   </div>
   {% else %}
   {% set fname = item.name.rsplit('/', 1)[-1] %}
-  {% set kind = kinds.get(fname.rsplit('.', 1)[-1] | lower if '.' in fname else '', 'file') %}
+  {% set kind = item.name | kind %}
   {% set dl = url_for('download_file', bucket_name=bucket_name, path=item.name) %}
   <div class="file-row{{ ' is-main' if kind == 'archive' }}">
     <div class="file-name">

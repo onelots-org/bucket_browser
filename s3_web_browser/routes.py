@@ -1,5 +1,5 @@
 import zlib
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import boto3
 import botocore
@@ -8,6 +8,13 @@ from flask import Flask, Response, redirect, render_template, request, url_for
 from s3_web_browser.s3 import list_entries
 
 ROOT_BUCKET = "onelots-builds-bucket"
+
+KINDS = {
+    **dict.fromkeys(("zip", "tar", "gz", "rar", "7z", "bz2", "xz", "tgz"), "archive"),
+    **dict.fromkeys(("img", "iso"), "image"),
+    **dict.fromkeys(("sha256sum", "sha256", "sha1", "sha512", "md5", "checksums"), "sum"),
+    **dict.fromkeys(("json", "sh"), "code"),
+}
 
 ERRORS = {
     "AccessDenied": (403, "You do not have permission to access this bucket."),
@@ -26,6 +33,10 @@ def register_routes(app: Flask) -> None:  # noqa:C901
     @app.context_processor
     def inject_globals() -> dict:
         return {"ROOT_BUCKET": ROOT_BUCKET, "ASSET_VER": asset_ver}
+
+    @app.template_filter()
+    def kind(name: str) -> str:
+        return KINDS.get(PurePosixPath(name).suffix[1:].lower(), "file")
 
     @app.errorhandler(botocore.exceptions.ClientError)
     def s3_error(e: botocore.exceptions.ClientError) -> tuple[str, int]:
