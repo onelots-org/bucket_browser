@@ -1,20 +1,18 @@
-FROM python:3.12.6-bookworm
+FROM python:3.12.6-slim-bookworm
 
 ARG POETRY_VERSION=1.8.3
-ENV POETRY_VERSION=$POETRY_VERSION
-ENV POETRY_HOME=/usr/local
-ENV POETRY_VIRTUALENVS_CREATE=false
-RUN curl -sSL https://install.python-poetry.org | python -
+ENV POETRY_VIRTUALENVS_CREATE=false \
+    PYTHONUNBUFFERED=1
 
 WORKDIR /usr/src/app
 
 COPY poetry.lock pyproject.toml /usr/src/app/
 
-RUN poetry install
+RUN pip install --no-cache-dir poetry==$POETRY_VERSION \
+    && poetry install --only main --no-interaction \
+    && rm -rf /root/.cache
 
 COPY . /usr/src/app/
-
-RUN chown -R nobody /usr/src/app/
 
 RUN usermod --home /tmp nobody
 USER nobody
