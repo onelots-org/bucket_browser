@@ -36,9 +36,6 @@
 
 {# ── Actions bar ── #}
 <div class="actions">
-  {% if path %}
-  <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=path.rstrip('/').rsplit('/', 1)[0] + '/' if '/' in path.rstrip('/') else '') }}" class="btn btn-ghost"><svg class="ic ic-sm"><use href="#i-up"/></svg>Up</a>
-  {% endif %}
   {% if search_param %}
   <span class="count-badge">
     {{ total_items }} result{% if total_items != 1 %}s{% endif %} for "<strong>{{ search_param }}</strong>"
