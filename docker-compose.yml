@@ -5,7 +5,5 @@ services:
     ports:
       - "8000:8000"
     restart: unless-stopped
-    environment:
-      - PYTHONPATH=/usr/src/app
     env_file:
       - .env
