@@ -2,10 +2,10 @@
 {% block title %}{{ rom | rom_name }} builds — Onelots{% endblock %}
 {% block description %}Latest {{ rom | rom_name }} builds for {{ devices | length }} device{{ '' if devices | length == 1 else 's' }}: {{ devices | map(attribute='device') | join(', ') }}.{% endblock %}
 {% block content %}
-<nav class="breadcrumb">
+<nav class="breadcrumb" aria-label="Breadcrumb">
   <a href="{{ url_for('root_index') }}">Downloads</a>
   <span class="sep">/</span>
-  <span class="current">{{ rom | rom_name }}</span>
+  <span class="current" aria-current="page">{{ rom | rom_name }}</span>
 </nav>
 
 <div class="page-head">

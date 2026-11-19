@@ -3,7 +3,7 @@
 <h1 class="visually-hidden">{{ path.rstrip('/').rsplit('/', 1)[-1] if path else 'Files' }}</h1>
 
 {# ── Breadcrumb ── #}
-<nav class="breadcrumb">
+<nav class="breadcrumb" aria-label="Breadcrumb">
   <a href="{{ url_for('root_index') }}">Downloads</a>
   {% set parts = path.rstrip('/').split('/') if path else [] %}
   {% for part in parts %}
@@ -11,7 +11,7 @@
     {% set part_path = parts[:loop.index] | join('/') + '/' %}
     {% set label = part | rom_name if loop.first and bucket_name == ROOT_BUCKET else part %}
     {% if loop.last %}
-      <span class="current">{{ label }}</span>
+      <span class="current" aria-current="page">{{ label }}</span>
     {% elif bucket_name == ROOT_BUCKET and loop.index == 1 %}
       <a href="{{ url_for('rom_devices', rom=part) }}">{{ label }}</a>
     {% elif bucket_name == ROOT_BUCKET and loop.index == 2 %}
@@ -99,9 +99,9 @@
 {# ── Pagination ── #}
 {% if total_pages > 1 %}
 {% set w = 2 %}
-<nav class="pagination">
+<nav class="pagination" aria-label="Pagination">
   {% if current_page > 1 %}
-  <a href="?page={{ current_page - 1 }}&search={{ search_param | urlencode }}" class="pg-arrow" title="Previous">&#8249;</a>
+  <a href="?page={{ current_page - 1 }}&search={{ search_param | urlencode }}" class="pg-arrow" title="Previous" aria-label="Previous page">&#8249;</a>
   {% endif %}
 
   {# Always show: first, last, and a window around current page #}
@@ -112,7 +112,7 @@
         <span class="pg-gap">…</span>
       {% endif %}
       {% if p == current_page %}
-        <span class="pg-current">{{ p }}</span>
+        <span class="pg-current" aria-current="page">{{ p }}</span>
       {% else %}
         <a href="?page={{ p }}&search={{ search_param | urlencode }}">{{ p }}</a>
       {% endif %}
@@ -122,7 +122,7 @@
   {% endfor %}
 
   {% if current_page < total_pages %}
-  <a href="?page={{ current_page + 1 }}&search={{ search_param | urlencode }}" class="pg-arrow" title="Next">&#8250;</a>
+  <a href="?page={{ current_page + 1 }}&search={{ search_param | urlencode }}" class="pg-arrow" title="Next" aria-label="Next page">&#8250;</a>
   {% endif %}
 </nav>
 {% endif %}

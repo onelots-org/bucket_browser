@@ -2,12 +2,12 @@
 {% block title %}{{ device }} · {{ rom | rom_name }} — Onelots{% endblock %}
 {% block description %}{% set latest = builds[0] %}Latest {{ rom | rom_name }} build for {{ device }}: {{ latest.version }} (Android {{ latest.android }}) from {{ latest.day }}{% if latest.zip %}, {{ latest.zip.size }}{% endif %}. {{ builds | length }} build{{ '' if builds | length == 1 else 's' }} available.{% endblock %}
 {% block content %}
-<nav class="breadcrumb">
+<nav class="breadcrumb" aria-label="Breadcrumb">
   <a href="{{ url_for('root_index') }}">Downloads</a>
   <span class="sep">/</span>
   <a href="{{ url_for('rom_devices', rom=rom) }}">{{ rom | rom_name }}</a>
   <span class="sep">/</span>
-  <span class="current">{{ device }}</span>
+  <span class="current" aria-current="page">{{ device }}</span>
 </nav>
 
 <div class="page-head">
