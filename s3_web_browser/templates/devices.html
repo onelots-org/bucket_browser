@@ -17,9 +17,13 @@
 </div>
 <p class="page-subtitle">{{ devices | length }} device{{ '' if devices | length == 1 else 's' }} &middot; latest build of each</p>
 
+<div class="search-bar">
+  <input class="device-filter" type="text" placeholder="Find your device…" autocomplete="off" aria-label="Find your device">
+</div>
+
 <div class="device-grid">
   {% for build in devices %}
-  <article class="device-card">
+  <article class="device-card" data-device="{{ build.device | lower }}">
     <a href="{{ url_for('device_builds', rom=rom, device=build.device) }}" class="device-name">{{ build.device }}</a>
     <p class="device-meta">{{ build.version }} &middot; Android {{ build.android }}</p>
     <p class="device-meta"{% if build.zip %} title="{{ build.zip.date_modified }}"{% endif %}>{{ build.day }}{% if build.zip %} &middot; {{ build.zip.age }} &middot; {{ build.zip.size }}{% endif %}</p>
@@ -32,4 +36,17 @@
   </article>
   {% endfor %}
 </div>
+<p class="empty device-empty" hidden>No device matches.</p>
+
+<script>
+  document.querySelector('.device-filter').addEventListener('input', e => {
+    const q = e.target.value.trim().toLowerCase();
+    let shown = 0;
+    for (const card of document.querySelectorAll('.device-card')) {
+      card.hidden = !card.dataset.device.includes(q);
+      shown += !card.hidden;
+    }
+    document.querySelector('.device-empty').hidden = shown > 0;
+  });
+</script>
 {% endblock %}

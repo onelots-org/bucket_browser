@@ -423,6 +423,7 @@ header .logo:hover { color: var(--accent); }
   box-shadow: var(--shadow);
   transition: border-color var(--transition), box-shadow var(--transition);
 }
+.device-card[hidden], .device-empty[hidden] { display: none; }
 .device-card:hover { border-color: var(--border-bright); box-shadow: 0 0 20px var(--accent-glow); }
 .device-name {
   margin-bottom: 4px;
