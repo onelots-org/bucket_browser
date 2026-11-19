@@ -36,6 +36,7 @@ humanize = "^4.15.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.15.9"
+pytest = "^9.2.0"
 
 [tool.poetry.urls]
 "Tracker" = "https://github.com/romanzdk/s3-web-browser/issues"
@@ -121,6 +122,7 @@ max-complexity = 10
 [tool.ruff.lint.per-file-ignores]
 # https://docs.astral.sh/ruff/rules/
 "__init__.py" = ["F401", "F403", "F405"]
+"tests/*" = ["ANN", "ARG", "D", "EM", "N803", "PLR2004", "S101", "SLF001"]
 
 
 [tool.ruff.lint.pylint]
@@ -132,3 +134,8 @@ max-statements = 80
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
+
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
