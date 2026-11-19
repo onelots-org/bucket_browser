@@ -244,6 +244,10 @@ header .logo:hover { color: var(--accent); }
 .file-name svg { flex-shrink: 0; }
 .is-folder a::after { content: ""; position: absolute; inset: 0; }
 
+@media screen and (max-width: 600px) {
+  .file-name a { white-space: normal; overflow-wrap: anywhere; }
+}
+
 .file-size, .file-date {
   font-size: 12px;
   font-family: var(--font-mono);
