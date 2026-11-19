@@ -192,7 +192,6 @@ header .logo:hover { color: var(--accent); }
   margin-bottom: 16px;
   flex-wrap: wrap;
 }
-.actions .spacer { flex: 1; }
 
 /* ── File table ── */
 .file-table {
