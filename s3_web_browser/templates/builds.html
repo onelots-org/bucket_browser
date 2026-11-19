@@ -34,7 +34,7 @@
       <li>
         <svg aria-hidden="true" class="ic t-{{ kind }}"><use href="#i-{{ kind }}"/></svg>
         <a href="{{ url_for('download_file', bucket_name=ROOT_BUCKET, path=file.name) }}" target="_blank" title="{{ file.name }}">{{ file.name.rsplit('/', 1)[-1] }}</a>
-        <span class="build-size">{{ file.size }}</span>
+        <span class="build-size">{% if downloaded.get(file.name) %}{{ downloaded[file.name] | downloads }} &middot; {% endif %}{{ file.size }}</span>
       </li>
       {% endfor %}
     </ul>

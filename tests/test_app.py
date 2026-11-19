@@ -315,10 +315,12 @@ def test_download_counts_are_shown(client):
     for _ in range(1233):
         client.get(zip_url.format("20261111", "20261111"))
     client.get(zip_url.format("20261105", "20261105"))
+    client.get("/download/buckets/onelots-builds-bucket/rom/dev1/17/24.0/20261111/boot.img")
     _, html = get(client, "/roms/rom/dev1/")
     assert "1,234 downloads &middot; newest first" in html
     assert "Android 17 &middot; 1,233 downloads" in html
     assert "Android 17 &middot; 1 download<" in html
+    assert "1 download &middot; " in html
     _, html = get(client, "/roms/rom/")
     assert "1,234 downloads" in html
     assert "0 downloads" not in html
