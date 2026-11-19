@@ -44,6 +44,12 @@ def register_routes(app: Flask) -> None:  # noqa:C901
     def kind(name: str) -> str:
         return KINDS.get(PurePosixPath(name).suffix[1:].lower(), "file")
 
+    @app.before_request
+    def only_root_bucket() -> tuple[str, int] | None:
+        if (request.view_args or {}).get("bucket_name", ROOT_BUCKET) != ROOT_BUCKET:
+            return render_template("error.html", error="This page does not exist."), 404
+        return None
+
     @app.errorhandler(botocore.exceptions.ClientError)
     def s3_error(e: botocore.exceptions.ClientError) -> tuple[str, int]:
         code = e.response["Error"]["Code"]

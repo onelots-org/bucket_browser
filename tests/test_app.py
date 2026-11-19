@@ -39,8 +39,8 @@ class FakeS3:
 
     def paginate(self, Bucket, Prefix="", Delimiter=None):
         self.listings += 1
-        if Bucket == "missing":
-            raise client_error("NoSuchBucket")
+        if Prefix.startswith("denied/"):
+            raise client_error("AccessDenied")
         prefixes, contents = set(), []
         for key in (k for k in KEYS if k.startswith(Prefix)):
             rel = key[len(Prefix) :]
@@ -238,21 +238,33 @@ def test_rom_without_builds_falls_back_to_folders(client):
 
 
 def test_s3_errors(client):
-    r, html = get(client, "/buckets/missing")
-    assert r.status_code == 404
-    assert "does not exist" in html
+    r, html = get(client, "/denied/")
+    assert r.status_code == 403
+    assert "permission" in html
+
+
+def test_other_buckets_are_refused(client, fake):
+    for url in (
+        "/buckets/other",
+        "/buckets/other/a/",
+        "/search/buckets/other?search=a",
+        "/download/buckets/other/a/x.zip",
+    ):
+        r, _ = get(client, url)
+        assert r.status_code == 404
+    assert fake.listings == 0
 
 
 def test_json_is_served_directly(client):
-    r, _ = get(client, "/download/buckets/b/a/sub/deep/z.json")
+    r, _ = get(client, "/download/buckets/onelots-builds-bucket/a/sub/deep/z.json")
     assert r.status_code == 200
     assert r.mimetype == "application/json"
-    r, _ = get(client, "/download/buckets/b/missing.json")
+    r, _ = get(client, "/download/buckets/onelots-builds-bucket/missing.json")
     assert r.status_code == 404
 
 
 def test_other_files_redirect_to_s3(client):
-    r, _ = get(client, "/download/buckets/b/a/x.zip")
+    r, _ = get(client, "/download/buckets/onelots-builds-bucket/a/x.zip")
     assert r.status_code == 302
     assert r.headers["Location"] == "https://s3.example/presigned"
 
