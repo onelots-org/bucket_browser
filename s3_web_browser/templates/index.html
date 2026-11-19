@@ -9,6 +9,7 @@
   <a href="{{ url_for('view_bucket', bucket_name=ROOT_BUCKET, path=bucket.name + '/') }}" class="bucket-card">
     <svg class="ic ic-lg"><use href="#i-folder"/></svg>
     <span title="{{ bucket.name }}">{{ bucket.name }}</span>
+    <small>{{ bucket.count }} item{{ '' if bucket.count == 1 else 's' }}</small>
   </a>
   {% endfor %}
 </div>

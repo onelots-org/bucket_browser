@@ -79,6 +79,7 @@ def test_index(client):
     r, html = get(client, "/")
     assert r.status_code == 200
     assert "many" in html
+    assert "2500 items" in html
 
 
 def test_browse_lists_one_level(client, fake):

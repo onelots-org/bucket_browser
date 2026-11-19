@@ -55,7 +55,8 @@ def register_routes(app: Flask) -> None:  # noqa:C901
         )
         prefixes = response.get("CommonPrefixes", [])
         virtual_buckets = [
-            {"name": p["Prefix"].rstrip("/")} for p in prefixes
+            {"name": p["Prefix"].rstrip("/"), "count": len(list_entries(s3_client, ROOT_BUCKET, p["Prefix"]))}
+            for p in prefixes
         ]
         return render_template("index.html", buckets=virtual_buckets)
 

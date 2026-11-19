@@ -373,6 +373,13 @@ header .logo:hover { color: var(--accent); }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.bucket-card small {
+  margin-left: auto;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-xmut);
+  white-space: nowrap;
+}
 
 /* ── Page title ── */
 .page-title {
