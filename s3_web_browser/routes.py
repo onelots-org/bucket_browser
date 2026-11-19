@@ -158,6 +158,19 @@ def register_routes(app: Flask) -> None:  # noqa:C901
     @app.route("/download/buckets/<bucket_name>/<path:path>")
     def download_file(bucket_name: str, path: str) -> Response:
         s3_client = boto3.client("s3", **app.config["AWS_KWARGS"])
+        # OTA clients (LineageOS Updater) don't follow redirects for the update list
+        if path.endswith(".json"):
+            try:
+                obj = s3_client.get_object(Bucket=bucket_name, Key=path)
+            except botocore.exceptions.ClientError as e:
+                if e.response["Error"]["Code"] in ("NoSuchKey", "404"):
+                    return Response("Not found\n", status=404, mimetype="text/plain")
+                raise
+            return Response(
+                obj["Body"].read(),
+                mimetype="application/json",
+                headers={"Cache-Control": "no-cache"},
+            )
         url = s3_client.generate_presigned_url(
             "get_object",
             Params={"Bucket": bucket_name, "Key": path},
