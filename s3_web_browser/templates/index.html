@@ -6,14 +6,18 @@
 {% if bucket_list %}
 <div class="bucket-grid">
   {% for bucket in bucket_list %}
-  <a href="{{ url_for('view_bucket', bucket_name=ROOT_BUCKET, path=bucket.name + '/') }}" class="bucket-card">
+  <a href="{{ url_for('rom_devices', rom=bucket.name) if bucket.devices else url_for('view_bucket', bucket_name=ROOT_BUCKET, path=bucket.name + '/') }}" class="bucket-card">
     {% if bucket.logo %}
     <img src="/static/rom-{{ bucket.name }}.png?v={{ ASSET_VER }}" width="48" height="24" alt="">
     {% else %}
     <svg class="ic ic-lg"><use href="#i-folder"/></svg>
     {% endif %}
     <span title="{{ bucket.name }}">{{ bucket.name }}</span>
+    {% if bucket.devices %}
+    <small>{{ bucket.devices }} device{{ '' if bucket.devices == 1 else 's' }}</small>
+    {% else %}
     <small>{{ bucket.count }} item{{ '' if bucket.count == 1 else 's' }}</small>
+    {% endif %}
   </a>
   {% endfor %}
 </div>

@@ -89,6 +89,9 @@ def test_index(client):
     assert "many" in html
     assert "2500 items" in html
     assert "rom-" not in html
+    assert 'href="/roms/rom/"' in html
+    assert "2 devices" in html
+    assert 'href="/buckets/onelots-builds-bucket/many/"' in html
 
 
 def test_browse_lists_one_level(client, fake):

@@ -70,6 +70,7 @@ def register_routes(app: Flask) -> None:  # noqa:C901
             {
                 "name": p["Prefix"].rstrip("/"),
                 "count": len(list_entries(s3_client, ROOT_BUCKET, p["Prefix"])),
+                "devices": len({b.device for b in list_builds(s3_client, ROOT_BUCKET, p["Prefix"].rstrip("/"))}),
                 "logo": p["Prefix"].rstrip("/") in logos,
             }
             for p in prefixes
