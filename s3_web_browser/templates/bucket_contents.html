@@ -7,10 +7,15 @@
   {% for part in parts %}
     <span class="sep">/</span>
     {% set part_path = parts[:loop.index] | join('/') + '/' %}
+    {% set label = part | rom_name if loop.first and bucket_name == ROOT_BUCKET else part %}
     {% if loop.last %}
-      <span class="current">{{ part }}</span>
+      <span class="current">{{ label }}</span>
+    {% elif bucket_name == ROOT_BUCKET and loop.index == 1 %}
+      <a href="{{ url_for('rom_devices', rom=part) }}">{{ label }}</a>
+    {% elif bucket_name == ROOT_BUCKET and loop.index == 2 %}
+      <a href="{{ url_for('device_builds', rom=parts[0], device=part) }}">{{ label }}</a>
     {% else %}
-      <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=part_path) }}">{{ part }}</a>
+      <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=part_path) }}">{{ label }}</a>
     {% endif %}
   {% endfor %}
 </nav>

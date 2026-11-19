@@ -200,9 +200,17 @@ def test_device_builds(client):
     assert "boot.img" in html
 
 
-def test_unknown_device(client):
+def test_device_without_builds_falls_back_to_folders(client):
     r, _ = get(client, "/roms/rom/nope/")
-    assert r.status_code == 404
+    assert r.status_code == 302
+    assert r.headers["Location"].endswith("/buckets/onelots-builds-bucket/rom/nope/")
+
+
+def test_breadcrumb_links_to_catalog(client):
+    _, html = get(client, "/rom/dev1/17/24.0/")
+    assert 'href="/roms/rom/"' in html
+    assert 'href="/roms/rom/dev1/"' in html
+    assert 'href="/buckets/onelots-builds-bucket/rom/dev1/17/"' in html
 
 
 def test_unknown_folder(client):

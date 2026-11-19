@@ -105,10 +105,10 @@ def register_routes(app: Flask) -> None:  # noqa:C901
         )
 
     @app.route("/roms/<rom>/<device>/")
-    def device_builds(rom: str, device: str) -> str | tuple[str, int]:
+    def device_builds(rom: str, device: str) -> str | Response:
         builds = [b for b in list_builds(s3_client, ROOT_BUCKET, rom) if b.device == device]
         if not builds:
-            return render_template("error.html", error="No builds found for this device."), 404
+            return redirect(url_for("view_bucket", bucket_name=ROOT_BUCKET, path=f"{rom}/{device}/"))
         return render_template("builds.html", rom=rom, device=device, path=f"{rom}/{device}", builds=builds)
 
     @app.route("/search/buckets/<bucket_name>", defaults={"path": ""})
