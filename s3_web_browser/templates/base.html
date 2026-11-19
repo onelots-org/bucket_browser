@@ -45,10 +45,6 @@
     <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></symbol>
   </svg>
   <div id="nprogress"></div>
-  <div id="loading-overlay">
-    <div class="spinner"></div>
-    <div class="loading-msg" id="loading-msg">Loading…</div>
-  </div>
 
   <header>
     <a href="/" class="logo"><svg class="ic ic-lg"><use href="#i-db"/></svg>Onelots - Builds download</a>
@@ -59,25 +55,13 @@
 
   <script>
     const bar = document.getElementById('nprogress');
-    const overlay = document.getElementById('loading-overlay');
-    const loadingMsg = document.getElementById('loading-msg');
-    const DELAY_MS = 150; // don't show for fast loads
-    let timer = null;
 
-    function showLoading(msg) {
-      // Start the top progress bar immediately
+    function showLoading() {
       bar.className = 'running';
-      // Show the overlay only if the response takes > DELAY_MS
-      timer = setTimeout(() => {
-        loadingMsg.textContent = msg || 'Loading…';
-        overlay.classList.add('visible');
-      }, DELAY_MS);
     }
 
     function hideLoading() {
-      clearTimeout(timer);
       bar.className = 'done';
-      overlay.classList.remove('visible');
       setTimeout(() => { bar.className = ''; }, 500);
     }
 
@@ -93,17 +77,14 @@
       } catch { return; }
       // Skip download route — browser handles that
       if (href.includes('/download/')) return;
-      showLoading('Loading…');
+      showLoading();
     });
 
     // Intercept search form submit
     document.addEventListener('submit', e => {
       const form = e.target.closest('form');
       if (!form) return;
-      const input = form.querySelector('input[name="search"]');
-      const val = input ? input.value.trim() : '';
-      const msg = val ? `Searching for "${val}"…` : 'Loading…';
-      showLoading(msg);
+      showLoading();
       // Put the search button into loading state
       const btn = form.querySelector('button[type="submit"]');
       if (btn) {
