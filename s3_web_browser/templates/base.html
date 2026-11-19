@@ -31,6 +31,21 @@
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><path d="M21 8v13H3V8"/><rect x="1" y="3" width="22" height="5"/><path d="M10 12h4"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M9 7V4m3 3V4m3 3V4M9 20v-3m3 3v-3m3 3v-3M7 9H4m3 3H4m3 3H4m16-6h-3m3 3h-3m3 3h-3"/></symbol>
+    <symbol id="i-sum" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></symbol>
+  </svg>
   <div id="nprogress"></div>
   <div id="loading-overlay">
     <div class="spinner"></div>
@@ -38,12 +53,7 @@
   </div>
 
   <header>
-    <a href="/" class="logo">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/>
-      </svg>
-      Onelots - Builds download
-    </a>
+    <a href="/" class="logo"><svg class="ic ic-lg"><use href="#i-db"/></svg>Onelots - Builds download</a>
   </header>
   <div class="page">
     {% block content %}{% endblock %}
@@ -100,11 +110,7 @@
       const btn = form.querySelector('button[type="submit"]');
       if (btn) {
         btn.classList.add('loading');
-        const icon = btn.querySelector('svg');
-        if (icon) icon.classList.add('btn-icon');
-        const sp = document.createElement('span');
-        sp.className = 'btn-spinner';
-        btn.prepend(sp);
+        btn.insertAdjacentHTML('afterbegin', '<span class="btn-spinner"></span>');
       }
     });
 
@@ -118,17 +124,10 @@
     document.addEventListener('click', e => {
       const btn = e.target.closest('.copy-btn');
       if (!btn) return;
-      const path = btn.dataset.s3path;
-      navigator.clipboard.writeText(path).then(() => {
-        const iconCopy  = btn.querySelector('.icon-copy');
-        const iconCheck = btn.querySelector('.icon-check');
-        iconCopy.style.display  = 'none';
-        iconCheck.style.display = '';
+      navigator.clipboard.writeText(btn.dataset.s3path).then(() => {
         btn.classList.add('copied');
         btn.title = 'Copied!';
         setTimeout(() => {
-          iconCopy.style.display  = '';
-          iconCheck.style.display = 'none';
           btn.classList.remove('copied');
           btn.title = 'Copy S3 path';
         }, 1500);

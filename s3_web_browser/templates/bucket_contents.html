@@ -24,10 +24,7 @@
     autocomplete="off"
     type="text"
   >
-  <button class="btn btn-primary" type="submit">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    Search
-  </button>
+  <button class="btn btn-primary" type="submit"><svg class="ic ic-sm"><use href="#i-search"/></svg>Search</button>
   {% if search_param %}
   <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=path) }}" class="btn btn-ghost">Clear</a>
   {% endif %}
@@ -39,10 +36,7 @@
 {# ── Actions bar ── #}
 <div class="actions">
   {% if path %}
-  <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=path.rstrip('/').rsplit('/', 1)[0] + '/' if '/' in path.rstrip('/') else '') }}" class="btn btn-ghost">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-    Up
-  </a>
+  <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=path.rstrip('/').rsplit('/', 1)[0] + '/' if '/' in path.rstrip('/') else '') }}" class="btn btn-ghost"><svg class="ic ic-sm"><use href="#i-up"/></svg>Up</a>
   {% endif %}
   {% if search_param %}
   <span class="count-badge">
@@ -56,6 +50,12 @@
 
 {# ── File listing ── #}
 {% if contents %}
+{% set kinds = {
+  'zip': 'archive', 'tar': 'archive', 'gz': 'archive', 'rar': 'archive', '7z': 'archive', 'bz2': 'archive', 'xz': 'archive', 'tgz': 'archive',
+  'img': 'image', 'iso': 'image',
+  'sha256sum': 'sum', 'sha256': 'sum', 'sha1': 'sum', 'sha512': 'sum', 'md5': 'sum', 'checksums': 'sum',
+  'json': 'code', 'sh': 'code',
+} %}
 <div class="file-table">
   <div class="file-table-header">
     <div>Name</div>
@@ -64,72 +64,38 @@
     <div></div>
   </div>
   {% for item in contents %}
+  {% if item.type == "folder" %}
   <div class="file-row">
-    {% if item.type == "folder" %}
     <div class="file-name is-folder">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-      </svg>
-      <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=item.name) }}" title="{{ item.name }}">
-        {{ item.name.rstrip('/').rsplit('/', 1)[-1] }}/
-      </a>
+      <svg class="ic t-folder"><use href="#i-folder"/></svg>
+      <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=item.name) }}" title="{{ item.name }}">{{ item.name.rstrip('/').rsplit('/', 1)[-1] }}/</a>
     </div>
     <div class="file-size">—</div>
     <div class="file-date">—</div>
-    <div class="file-action"></div>
-    {% else %}
-      {% set fname = item.name.rsplit('/', 1)[-1] %}
-      {% set ext = fname.rsplit('.', 1)[-1] | lower if '.' in fname else '' %}
-      <div class="file-name">
-        {% if ext in ('zip', 'tar', 'gz', 'rar', '7z', 'bz2', 'xz', 'tgz') %}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fb923c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
-          </svg>
-        {% elif ext in ('img', 'iso') %}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="7" y="7" width="10" height="10" rx="1"/>
-            <line x1="9" y1="7" x2="9" y2="4"/><line x1="12" y1="7" x2="12" y2="4"/><line x1="15" y1="7" x2="15" y2="4"/>
-            <line x1="9" y1="20" x2="9" y2="17"/><line x1="12" y1="20" x2="12" y2="17"/><line x1="15" y1="20" x2="15" y2="17"/>
-            <line x1="7" y1="9" x2="4" y2="9"/><line x1="7" y1="12" x2="4" y2="12"/><line x1="7" y1="15" x2="4" y2="15"/>
-            <line x1="20" y1="9" x2="17" y2="9"/><line x1="20" y1="12" x2="17" y2="12"/><line x1="20" y1="15" x2="17" y2="15"/>
-          </svg>
-        {% elif ext in ('sha256sum', 'sha256', 'sha1', 'sha512', 'md5', 'checksums') %}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a3e635" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <polyline points="9 12 11 14 15 10"/>
-          </svg>
-        {% elif ext in ('json', 'sh') %}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-          </svg>
-        {% else %}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-          </svg>
-        {% endif %}
-      <a href="{{ url_for('download_file', bucket_name=bucket_name, path=item.name) }}" target="_blank" title="{{ item.name }}">
-      {{ fname }}
-    </a>
+    <div></div>
   </div>
-
+  {% else %}
+  {% set fname = item.name.rsplit('/', 1)[-1] %}
+  {% set kind = kinds.get(fname.rsplit('.', 1)[-1] | lower if '.' in fname else '', 'file') %}
+  {% set dl = url_for('download_file', bucket_name=bucket_name, path=item.name) %}
+  <div class="file-row">
+    <div class="file-name">
+      <svg class="ic t-{{ kind }}"><use href="#i-{{ kind }}"/></svg>
+      <a href="{{ dl }}" target="_blank" title="{{ item.name }}">{{ fname }}</a>
+    </div>
     <div class="file-size">{{ item.size }}</div>
     <div class="file-date">{{ item.date_modified }}</div>
     <div class="file-action">
-      <button class="dl-btn copy-btn" title="Copy S3 path" data-s3path="s3://{{ bucket_name }}/{{ item.name }}">
-        <svg class="icon-copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        <svg class="icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polyline points="20 6 9 17 4 12"/></svg>
-      </button>
-      <a href="{{ url_for('download_file', bucket_name=bucket_name, path=item.name) }}" target="_blank" class="dl-btn" title="Download">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      </a>
+      <button class="dl-btn copy-btn" title="Copy S3 path" data-s3path="s3://{{ bucket_name }}/{{ item.name }}"><svg class="ic ic-sm icon-copy"><use href="#i-copy"/></svg><svg class="ic ic-sm icon-check"><use href="#i-check"/></svg></button>
+      <a href="{{ dl }}" target="_blank" class="dl-btn" title="Download"><svg class="ic ic-sm"><use href="#i-download"/></svg></a>
     </div>
-    {% endif %}
   </div>
+  {% endif %}
   {% endfor %}
 </div>
 {% else %}
 <div class="empty">
-  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+  <svg class="ic ic-xl"><use href="#i-file"/></svg>
   <p>{% if search_param %}No results for "{{ search_param }}".{% else %}This folder is empty.{% endif %}</p>
 </div>
 {% endif %}

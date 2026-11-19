@@ -31,6 +31,25 @@ body {
   min-height: 100vh;
 }
 
+.ic {
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ic-sm { width: 14px; height: 14px; }
+.ic-lg { width: 20px; height: 20px; }
+.ic-xl { width: 40px; height: 40px; stroke-width: 1.5; }
+.t-folder  { color: var(--folder); fill: currentColor; stroke-width: 1; }
+.t-archive { color: #fb923c; stroke-width: 1.5; }
+.t-image   { color: #34d399; stroke-width: 1.5; }
+.t-sum     { color: #a3e635; stroke-width: 1.5; }
+.t-code    { color: #38bdf8; stroke-width: 1.5; }
+.t-file    { color: #94a3b8; stroke-width: 1.5; }
+
 /* ── Header ── */
 header {
   background: rgba(13,13,15,0.85);
@@ -221,8 +240,6 @@ header .logo:hover { color: var(--accent); }
 }
 .file-name a:hover { color: var(--accent); }
 .file-name svg { flex-shrink: 0; }
-.icon-folder { color: var(--folder); }
-.icon-file   { color: var(--text-xmut); }
 
 .file-size, .file-date {
   font-size: 12px;
@@ -251,6 +268,8 @@ header .logo:hover { color: var(--accent); }
 }
 .dl-btn:hover { background: var(--bg); color: var(--accent); }
 .copy-btn.copied { color: var(--green); }
+.copy-btn .icon-check, .copy-btn.copied .icon-copy { display: none; }
+.copy-btn.copied .icon-check { display: block; }
 
 /* ── Empty state ── */
 .empty {
@@ -444,7 +463,7 @@ header .logo:hover { color: var(--accent); }
   border-radius: 50%;
   animation: spin .6s linear infinite;
 }
-.btn.loading .btn-icon { display: none; }
+.btn.loading .ic { display: none; }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
