@@ -7,13 +7,14 @@ from s3_web_browser.s3 import list_objects, parse_responses
 ROOT_BUCKET = "onelots-builds-bucket"
 
 def register_routes(app: Flask) -> None:  # noqa:C901
+    s3_client = boto3.client("s3", **app.config["AWS_KWARGS"])
+
     @app.context_processor
     def inject_globals() -> dict:
         return {"ROOT_BUCKET": ROOT_BUCKET}
 
     @app.route("/", methods=["GET"])
     def root_index() -> str:
-        s3_client = boto3.client("s3", **app.config["AWS_KWARGS"])
         response = s3_client.list_objects_v2(
             Bucket=ROOT_BUCKET,
             Delimiter="/",
@@ -29,7 +30,6 @@ def register_routes(app: Flask) -> None:  # noqa:C901
     def search_bucket(bucket_name: str, path: str) -> str:
         page = request.args.get("page", 1, type=int)
         items_per_page = app.config["PAGE_ITEMS"]
-        s3_client = boto3.client("s3", **app.config["AWS_KWARGS"])
         paginator = s3_client.get_paginator("list_objects_v2")
         all_entries = []
         all_prefixes = []
@@ -100,8 +100,6 @@ def register_routes(app: Flask) -> None:  # noqa:C901
         page = request.args.get("page", 1, type=int)
         items_per_page = app.config["PAGE_ITEMS"]
 
-        s3_client = boto3.client("s3", **app.config["AWS_KWARGS"])
-
         try:
             # Count total objects and find the continuation token for the requested page in one pass
             paginator = s3_client.get_paginator("list_objects_v2")
@@ -157,7 +155,6 @@ def register_routes(app: Flask) -> None:  # noqa:C901
 
     @app.route("/download/buckets/<bucket_name>/<path:path>")
     def download_file(bucket_name: str, path: str) -> Response:
-        s3_client = boto3.client("s3", **app.config["AWS_KWARGS"])
         # OTA clients (LineageOS Updater) don't follow redirects for the update list
         if path.endswith(".json"):
             try:
