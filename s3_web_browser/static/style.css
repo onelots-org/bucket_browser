@@ -204,6 +204,7 @@ header .logo:hover { color: var(--accent); }
 .file-row {
   display: grid;
   grid-template-columns: 1fr 90px 150px 68px;
+  position: relative;
   min-height: 47px;
   padding: 9px 16px;
   align-items: center;
@@ -241,6 +242,7 @@ header .logo:hover { color: var(--accent); }
 }
 .file-name a:hover { color: var(--accent); }
 .file-name svg { flex-shrink: 0; }
+.is-folder a::after { content: ""; position: absolute; inset: 0; }
 
 .file-size, .file-date {
   font-size: 12px;
