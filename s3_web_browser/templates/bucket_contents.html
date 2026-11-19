@@ -23,6 +23,7 @@
     placeholder="Search files and folders…"
     autocomplete="off"
     type="text"
+    aria-label="Search"
   >
   <button class="btn btn-primary" type="submit"><svg class="ic ic-sm"><use href="#i-search"/></svg>Search</button>
   {% if search_param %}
@@ -86,8 +87,8 @@
     <div class="file-size">{{ item.size }}</div>
     <div class="file-date">{{ item.date_modified }}</div>
     <div class="file-action">
-      <button class="dl-btn copy-btn" title="Copy S3 path" data-s3path="s3://{{ bucket_name }}/{{ item.name }}"><svg class="ic ic-sm icon-copy"><use href="#i-copy"/></svg><svg class="ic ic-sm icon-check"><use href="#i-check"/></svg></button>
-      <a href="{{ dl }}" target="_blank" class="dl-btn" title="Download"><svg class="ic ic-sm"><use href="#i-download"/></svg></a>
+      <button class="dl-btn copy-btn" type="button" title="Copy S3 path" aria-label="Copy S3 path" data-s3path="s3://{{ bucket_name }}/{{ item.name }}"><svg class="ic ic-sm icon-copy"><use href="#i-copy"/></svg><svg class="ic ic-sm icon-check"><use href="#i-check"/></svg></button>
+      <a href="{{ dl }}" target="_blank" class="dl-btn" title="Download" aria-label="Download"><svg class="ic ic-sm"><use href="#i-download"/></svg></a>
     </div>
   </div>
   {% endif %}
