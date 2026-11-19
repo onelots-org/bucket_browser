@@ -1,6 +1,6 @@
 {% extends "base.html" %}{% block content %}
-<div class="page-title">Buckets</div>
-<div class="page-subtitle">Select a bucket to browse its contents.</div>
+<div class="page-title">Downloads</div>
+<div class="page-subtitle">Pick a ROM to find a build for your device.</div>
 
 {% set bucket_list = buckets | list %}
 {% if bucket_list %}
@@ -24,7 +24,7 @@
 {% else %}
 <div class="empty">
   <svg class="ic ic-xl"><use href="#i-db"/></svg>
-  <p>No buckets found.</p>
+  <p>Nothing here yet.</p>
 </div>
 {% endif %}
 {% endblock %}

@@ -2,7 +2,7 @@
 
 {# ── Breadcrumb ── #}
 <nav class="breadcrumb">
-  <a href="{{ url_for('root_index') }}">Buckets</a>
+  <a href="{{ url_for('root_index') }}">Downloads</a>
   {% set parts = path.rstrip('/').split('/') if path else [] %}
   {% for part in parts %}
     <span class="sep">/</span>
