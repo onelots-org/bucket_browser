@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Onelots — Downloads{% if current_path %} · {{ current_path }}{% endif %}</title>
+  <title>Onelots — Downloads{% if path %} · {{ path }}{% endif %}</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/static/onelots.png">
@@ -19,7 +19,7 @@
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Onelots — Downloads{% if current_path %} · {{ current_path }}{% endif %}">
+  <meta property="og:title" content="Onelots — Downloads{% if path %} · {{ path }}{% endif %}">
   <meta property="og:description" content="ROM downloads — EvolutionX & LineageOS builds by Onelots.">
   <meta property="og:image" content="https://github.com/onelots.png">
 
