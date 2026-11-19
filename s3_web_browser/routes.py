@@ -106,6 +106,7 @@ def register_routes(app: Flask) -> None:  # noqa:C901
             }
             for rom in roms
         ]
+        virtual_buckets = [b for b in virtual_buckets if b["count"]]
         latest: dict = {}
         for rom in roms:
             for build in builds[rom]:

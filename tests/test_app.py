@@ -108,6 +108,13 @@ def test_index(client):
     assert "rom-20261105-dev1.zip" not in html
 
 
+def test_empty_roms_are_hidden(client):
+    with mock.patch(f"{__name__}.KEYS", ["empty/", "a/x.zip"]):
+        _, html = get(client, "/")
+    assert 'href="/buckets/onelots-builds-bucket/a/"' in html
+    assert "empty" not in html
+
+
 def test_browse_lists_one_level(client, fake):
     _, html = get(client, "/a/")
     assert "sub/" in html
