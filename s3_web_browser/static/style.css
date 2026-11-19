@@ -1,6 +1,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
+  color-scheme: dark;
   --bg:          #0d0d0f;
   --bg-secondary:#111114;
   --surface:     #16161a;
