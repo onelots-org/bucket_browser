@@ -288,6 +288,9 @@ header .logo:hover { color: var(--accent); }
 }
 .dl-btn:hover { background: var(--bg); color: var(--accent); }
 .copy-btn.copied { color: var(--green); }
+.is-main .file-name a { font-weight: 600; }
+.is-main .dl-main { background: var(--accent); color: #fff; box-shadow: 0 0 12px var(--accent-glow); }
+.is-main .dl-main:hover { background: var(--accent-h); color: #fff; }
 .copy-btn .icon-check, .copy-btn.copied .icon-copy { display: none; }
 .copy-btn.copied .icon-check { display: block; }
 
