@@ -50,6 +50,7 @@
     <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></symbol>
   </svg>
   <div id="nprogress"></div>
+  <div id="status" class="visually-hidden" role="status"></div>
 
   <header>
     <a href="/" class="logo"><img src="/static/onelots.png?v={{ ASSET_VER }}" width="24" height="24" alt="">Onelots — Builds</a>
@@ -109,11 +110,14 @@
       const btn = e.target.closest('.copy-btn');
       if (!btn) return;
       navigator.clipboard.writeText(btn.dataset.s3path).then(() => {
+        const status = document.getElementById('status');
         btn.classList.add('copied');
         btn.title = 'Copied!';
+        status.textContent = 'S3 path copied';
         setTimeout(() => {
           btn.classList.remove('copied');
           btn.title = 'Copy S3 path';
+          status.textContent = '';
         }, 1500);
       });
     });
