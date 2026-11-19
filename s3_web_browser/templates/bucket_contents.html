@@ -30,9 +30,6 @@
   <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=path) }}" class="btn btn-ghost">Clear</a>
   {% endif %}
 </form>
-{% if not path and not search_param %}
-<p class="hint">Searching from bucket root scans all objects recursively and may be slow for large buckets.</p>
-{% endif %}
 
 {# ── Actions bar ── #}
 <div class="actions">

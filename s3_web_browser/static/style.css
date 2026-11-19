@@ -175,15 +175,6 @@ header .logo:hover { color: var(--accent); }
   color: var(--text);
 }
 
-/* ── Hint ── */
-.hint {
-  font-size: 12px;
-  color: var(--text-xmut);
-  font-family: var(--font-mono);
-  margin-top: -14px;
-  margin-bottom: 16px;
-}
-
 /* ── Actions bar ── */
 .actions {
   display: flex;
