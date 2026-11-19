@@ -1,6 +1,6 @@
 {% extends "base.html" %}{% block content %}
 <div class="error-card">
-  <svg class="ic ic-xl"><use href="#i-alert"/></svg>
+  <svg aria-hidden="true" class="ic ic-xl"><use href="#i-alert"/></svg>
   <h1>Something went wrong</h1>
   <p>{{ error }}</p>
   <a href="{{ url_for('root_index') }}" class="btn btn-primary">Back to downloads</a>

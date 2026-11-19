@@ -12,7 +12,7 @@
 
 <div class="page-head">
   <h1 class="page-title">{{ device }}</h1>
-  <a href="{{ url_for('view_bucket', bucket_name=ROOT_BUCKET, path=rom + '/' + device + '/') }}" class="btn btn-ghost"><svg class="ic ic-sm"><use href="#i-folder"/></svg>Browse files</a>
+  <a href="{{ url_for('view_bucket', bucket_name=ROOT_BUCKET, path=rom + '/' + device + '/') }}" class="btn btn-ghost"><svg aria-hidden="true" class="ic ic-sm"><use href="#i-folder"/></svg>Browse files</a>
 </div>
 <p class="page-subtitle">{{ builds | length }} build{{ '' if builds | length == 1 else 's' }} &middot; newest first</p>
 
@@ -25,14 +25,14 @@
       {% if loop.first %}<span class="badge">Latest</span>{% endif %}
       {% if build.zip %}
       <span class="build-size">{{ build.zip.size }}</span>
-      <a href="{{ url_for('download_file', bucket_name=ROOT_BUCKET, path=build.zip.name) }}" target="_blank" class="btn btn-primary"><svg class="ic ic-sm"><use href="#i-download"/></svg>Download</a>
+      <a href="{{ url_for('download_file', bucket_name=ROOT_BUCKET, path=build.zip.name) }}" target="_blank" class="btn btn-primary"><svg aria-hidden="true" class="ic ic-sm"><use href="#i-download"/></svg>Download</a>
       {% endif %}
     </summary>
     <ul class="build-files">
       {% for file in build.files %}
       {% set kind = file.name | kind %}
       <li>
-        <svg class="ic t-{{ kind }}"><use href="#i-{{ kind }}"/></svg>
+        <svg aria-hidden="true" class="ic t-{{ kind }}"><use href="#i-{{ kind }}"/></svg>
         <a href="{{ url_for('download_file', bucket_name=ROOT_BUCKET, path=file.name) }}" target="_blank" title="{{ file.name }}">{{ file.name.rsplit('/', 1)[-1] }}</a>
         <span class="build-size">{{ file.size }}</span>
       </li>

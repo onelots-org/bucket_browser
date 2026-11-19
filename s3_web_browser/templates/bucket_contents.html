@@ -32,7 +32,7 @@
     type="text"
     aria-label="Search"
   >
-  <button class="btn btn-primary" type="submit"><svg class="ic ic-sm"><use href="#i-search"/></svg>Search</button>
+  <button class="btn btn-primary" type="submit"><svg aria-hidden="true" class="ic ic-sm"><use href="#i-search"/></svg>Search</button>
   {% if search_param %}
   <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=path) }}" class="btn btn-ghost">Clear</a>
   {% endif %}
@@ -63,7 +63,7 @@
   {% if item.type == "folder" %}
   <div class="file-row">
     <div class="file-name is-folder">
-      <svg class="ic t-folder"><use href="#i-folder"/></svg>
+      <svg aria-hidden="true" class="ic t-folder"><use href="#i-folder"/></svg>
       <a href="{{ url_for('view_bucket', bucket_name=bucket_name, path=item.name) }}" title="{{ item.name }}">{{ item.name.rstrip('/').rsplit('/', 1)[-1] }}/</a>
     </div>
     <div class="file-size">—</div>
@@ -76,14 +76,14 @@
   {% set dl = url_for('download_file', bucket_name=bucket_name, path=item.name) %}
   <div class="file-row{{ ' is-main' if kind == 'archive' }}">
     <div class="file-name">
-      <svg class="ic t-{{ kind }}"><use href="#i-{{ kind }}"/></svg>
+      <svg aria-hidden="true" class="ic t-{{ kind }}"><use href="#i-{{ kind }}"/></svg>
       <a href="{{ dl }}" target="_blank" title="{{ item.name }}">{{ item.name[path | length :] if search_param else fname }}</a>
     </div>
     <div class="file-size">{{ item.size }}</div>
     <div class="file-date" title="{{ item.date_modified }}">{{ item.age }}</div>
     <div class="file-action">
-      <button class="dl-btn copy-btn" type="button" title="Copy S3 path" aria-label="Copy S3 path" data-s3path="s3://{{ bucket_name }}/{{ item.name }}"><svg class="ic ic-sm icon-copy"><use href="#i-copy"/></svg><svg class="ic ic-sm icon-check"><use href="#i-check"/></svg></button>
-      <a href="{{ dl }}" target="_blank" class="dl-btn dl-main" title="Download" aria-label="Download"><svg class="ic ic-sm"><use href="#i-download"/></svg></a>
+      <button class="dl-btn copy-btn" type="button" title="Copy S3 path" aria-label="Copy S3 path" data-s3path="s3://{{ bucket_name }}/{{ item.name }}"><svg aria-hidden="true" class="ic ic-sm icon-copy"><use href="#i-copy"/></svg><svg aria-hidden="true" class="ic ic-sm icon-check"><use href="#i-check"/></svg></button>
+      <a href="{{ dl }}" target="_blank" class="dl-btn dl-main" title="Download" aria-label="Download"><svg aria-hidden="true" class="ic ic-sm"><use href="#i-download"/></svg></a>
     </div>
   </div>
   {% endif %}
@@ -91,7 +91,7 @@
 </div>
 {% else %}
 <div class="empty">
-  <svg class="ic ic-xl"><use href="#i-file"/></svg>
+  <svg aria-hidden="true" class="ic ic-xl"><use href="#i-file"/></svg>
   <p>{% if search_param %}No results for "{{ search_param }}".{% else %}This folder is empty.{% endif %}</p>
 </div>
 {% endif %}

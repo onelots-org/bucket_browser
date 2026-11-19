@@ -10,7 +10,7 @@
     {% if bucket.logo %}
     <img src="/static/rom-{{ bucket.name }}.png?v={{ ASSET_VER }}" width="48" height="24" alt="">
     {% else %}
-    <svg class="ic ic-lg"><use href="#i-folder"/></svg>
+    <svg aria-hidden="true" class="ic ic-lg"><use href="#i-folder"/></svg>
     {% endif %}
     <span title="{{ bucket.name }}">{{ bucket.name | rom_name }}</span>
     {% if bucket.devices %}
@@ -23,7 +23,7 @@
 </div>
 {% else %}
 <div class="empty">
-  <svg class="ic ic-xl"><use href="#i-db"/></svg>
+  <svg aria-hidden="true" class="ic ic-xl"><use href="#i-db"/></svg>
   <p>Nothing here yet.</p>
 </div>
 {% endif %}

@@ -15,7 +15,7 @@
     {% endif %}
     {{ rom | rom_name }}
   </h1>
-  <a href="{{ url_for('view_bucket', bucket_name=ROOT_BUCKET, path=rom + '/') }}" class="btn btn-ghost"><svg class="ic ic-sm"><use href="#i-folder"/></svg>Browse files</a>
+  <a href="{{ url_for('view_bucket', bucket_name=ROOT_BUCKET, path=rom + '/') }}" class="btn btn-ghost"><svg aria-hidden="true" class="ic ic-sm"><use href="#i-folder"/></svg>Browse files</a>
 </div>
 <p class="page-subtitle">{{ devices | length }} device{{ '' if devices | length == 1 else 's' }} &middot; latest build of each</p>
 
@@ -31,7 +31,7 @@
     <p class="device-meta"{% if build.zip %} title="{{ build.zip.date_modified }}"{% endif %}>{{ build.day }}{% if build.zip %} &middot; {{ build.zip.age }} &middot; {{ build.zip.size }}{% endif %}</p>
     <div class="device-actions">
       {% if build.zip %}
-      <a href="{{ url_for('download_file', bucket_name=ROOT_BUCKET, path=build.zip.name) }}" target="_blank" class="btn btn-primary"><svg class="ic ic-sm"><use href="#i-download"/></svg>Download</a>
+      <a href="{{ url_for('download_file', bucket_name=ROOT_BUCKET, path=build.zip.name) }}" target="_blank" class="btn btn-primary"><svg aria-hidden="true" class="ic ic-sm"><use href="#i-download"/></svg>Download</a>
       {% endif %}
       <a href="{{ url_for('device_builds', rom=rom, device=build.device) }}" class="btn btn-ghost">{{ counts[build.device] }} build{{ '' if counts[build.device] == 1 else 's' }}</a>
     </div>
