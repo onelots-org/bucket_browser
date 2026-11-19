@@ -81,7 +81,7 @@
   <div class="file-row">
     <div class="file-name">
       <svg class="ic t-{{ kind }}"><use href="#i-{{ kind }}"/></svg>
-      <a href="{{ dl }}" target="_blank" title="{{ item.name }}">{{ fname }}</a>
+      <a href="{{ dl }}" target="_blank" title="{{ item.name }}">{{ item.name[path | length :] if search_param else fname }}</a>
     </div>
     <div class="file-size">{{ item.size }}</div>
     <div class="file-date">{{ item.date_modified }}</div>
