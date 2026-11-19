@@ -89,10 +89,10 @@ header .logo {
   text-decoration: none;
   transition: color var(--transition);
 }
-header .logo svg {
-  color: var(--accent);
+header .logo img {
   flex-shrink: 0;
-  filter: drop-shadow(0 0 6px var(--accent-glow));
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--border-bright), 0 0 10px var(--accent-glow);
 }
 header .logo:hover { color: var(--accent); }
 
