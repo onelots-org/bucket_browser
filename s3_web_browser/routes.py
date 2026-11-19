@@ -1,3 +1,6 @@
+import zlib
+from pathlib import Path
+
 import boto3
 import botocore
 from flask import Flask, Response, redirect, render_template, request, url_for
@@ -16,10 +19,12 @@ ERRORS = {
 def register_routes(app: Flask) -> None:  # noqa:C901
     s3_client = boto3.client("s3", **app.config["AWS_KWARGS"])
     page_items = app.config["PAGE_ITEMS"]
+    static = Path(app.static_folder)
+    asset_ver = f"{zlib.crc32(b''.join(f.read_bytes() for f in sorted(static.iterdir()))):08x}"
 
     @app.context_processor
     def inject_globals() -> dict:
-        return {"ROOT_BUCKET": ROOT_BUCKET}
+        return {"ROOT_BUCKET": ROOT_BUCKET, "ASSET_VER": asset_ver}
 
     @app.errorhandler(botocore.exceptions.ClientError)
     def s3_error(e: botocore.exceptions.ClientError) -> tuple[str, int]:
