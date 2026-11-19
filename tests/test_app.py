@@ -196,7 +196,7 @@ def test_device_builds(client):
     r, html = get(client, "/roms/rom/dev1/")
     assert r.status_code == 200
     assert html.index("2026-11-11") < html.index("2026-11-05")
-    assert html.count("Latest") == 1
+    assert html.count('class="badge"') == 1
     assert "boot.img" in html
 
 
@@ -211,6 +211,12 @@ def test_breadcrumb_links_to_catalog(client):
     assert 'href="/roms/rom/"' in html
     assert 'href="/roms/rom/dev1/"' in html
     assert 'href="/buckets/onelots-builds-bucket/rom/dev1/17/"' in html
+
+
+def test_embeds(client):
+    _, html = get(client, "/roms/rom/dev1/")
+    assert '<meta name="twitter:card" content="summary_large_image">' in html
+    assert "https://downloads.onelots.org/static/og.jpg?v=" in html
 
 
 def test_unknown_folder(client):

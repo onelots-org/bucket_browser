@@ -19,6 +19,8 @@ class Config:  # noqa: D101
     if AWS_ENDPOINT_URL:
         AWS_KWARGS["endpoint_url"] = AWS_ENDPOINT_URL
 
+    SITE_URL = os.getenv("SITE_URL", "https://downloads.onelots.org")
+
     SEND_FILE_MAX_AGE_DEFAULT = 365 * 24 * 3600
 
     PAGE_ITEMS = int(os.getenv("PAGE_ITEMS", "300"))

@@ -34,7 +34,7 @@ def register_routes(app: Flask) -> None:  # noqa:C901
 
     @app.context_processor
     def inject_globals() -> dict:
-        return {"ROOT_BUCKET": ROOT_BUCKET, "ASSET_VER": asset_ver}
+        return {"ROOT_BUCKET": ROOT_BUCKET, "ASSET_VER": asset_ver, "SITE_URL": app.config["SITE_URL"]}
 
     @app.template_filter()
     def rom_name(rom: str) -> str:

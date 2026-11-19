@@ -18,15 +18,19 @@
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Onelots — Builds">
   <meta property="og:title" content="Onelots — Downloads{% if path %} · {{ path }}{% endif %}">
   <meta property="og:description" content="ROM downloads — EvolutionX & LineageOS builds by Onelots.">
-  <meta property="og:image" content="https://github.com/onelots.png">
+  <meta property="og:image" content="{{ SITE_URL }}/static/og.jpg?v={{ ASSET_VER }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Onelots — Builds">
 
   <!-- Twitter -->
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Onelots — Downloads">
   <meta name="twitter:description" content="ROM downloads — EvolutionX & LineageOS builds by Onelots.">
-  <meta name="twitter:image" content="https://github.com/onelots.png">
+  <meta name="twitter:image" content="{{ SITE_URL }}/static/og.jpg?v={{ ASSET_VER }}">
   <link rel="stylesheet" href="/static/style.css?v={{ ASSET_VER }}">
 </head>
 <body>
