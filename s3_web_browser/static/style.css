@@ -228,28 +228,13 @@ header .logo:hover { color: var(--accent); }
   color: var(--text-muted);
   white-space: nowrap;
 }
-.file-actions {
+.file-action {
   display: flex;
   justify-content: flex-end;
-  gap: 2px;
+  gap: 4px;
 }
-.file-action {
-  width: 28px;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  color: var(--text-xmut);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background var(--transition), color var(--transition);
-}
-.file-action:hover { background: var(--surface-2); color: var(--text); }
 
-.copy-btn {
+.dl-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -262,7 +247,7 @@ header .logo:hover { color: var(--accent); }
   color: var(--text-xmut);
   transition: background var(--transition), color var(--transition);
 }
-.copy-btn:hover { background: var(--bg); color: var(--accent); }
+.dl-btn:hover { background: var(--bg); color: var(--accent); }
 .copy-btn.copied { color: var(--green); }
 
 /* ── Empty state ── */
@@ -464,12 +449,3 @@ header .logo:hover { color: var(--accent); }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-/* ── Actions spacing ── */
-.file-actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: 12px;
-  flex-shrink: 0;
-}
