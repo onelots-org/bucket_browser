@@ -1,6 +1,6 @@
 import boto3
 import botocore
-from flask import Flask, Response, redirect, render_template, request
+from flask import Flask, Response, redirect, render_template, request, url_for
 
 from s3_web_browser.s3 import list_objects, parse_responses
 
@@ -91,11 +91,7 @@ def register_routes(app: Flask) -> None:  # noqa:C901
         # If a search param is present on a browse URL, redirect to the search route
         search_param = request.args.get("search", "")
         if search_param:
-            return redirect(
-                request.url_root.rstrip("/")
-                + f"/search/buckets/{bucket_name}/{path}".rstrip("/")
-                + f"?search={search_param}"
-            )
+            return redirect(url_for("search_bucket", bucket_name=bucket_name, path=path, search=search_param))
 
         page = request.args.get("page", 1, type=int)
         items_per_page = app.config["PAGE_ITEMS"]
