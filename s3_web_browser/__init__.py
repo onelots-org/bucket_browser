@@ -1,8 +1,11 @@
+import mimetypes
 import os
 
 from flask import Flask
 
 from s3_web_browser.routes import register_routes
+
+mimetypes.add_type("font/woff2", ".woff2")
 
 
 def create_app(config_class: str = "config.Config") -> Flask:

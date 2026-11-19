@@ -1,5 +1,18 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+@font-face {
+  font-family: 'Inter';
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(inter.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 400 600;
+  font-display: swap;
+  src: url(jetbrains-mono.woff2) format('woff2');
+}
+
 :root {
   color-scheme: dark;
   --bg:          #0d0d0f;
