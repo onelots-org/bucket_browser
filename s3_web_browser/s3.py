@@ -1,4 +1,5 @@
 import dataclasses
+import datetime as dt
 import time
 
 import botocore
@@ -13,6 +14,7 @@ class S3Entry:
     type: str
     size: str = ""
     date_modified: str = ""
+    age: str = ""
 
 
 LISTING_TTL = 60
@@ -46,6 +48,7 @@ def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, 
     if not search:
         params["Delimiter"] = "/"
     search = search.lower()
+    now = dt.datetime.now(dt.UTC)
 
     folders: set[str] = set()
     files: list[S3Entry] = []
@@ -64,6 +67,7 @@ def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, 
                     type="file",
                     size=humanize.naturalsize(obj["Size"]).replace("Bytes", "B").replace("Byte", "B"),
                     date_modified=obj["LastModified"].strftime("%Y-%m-%d %H:%M UTC"),
+                    age=humanize.naturaltime(now - obj["LastModified"]),
                 )
             )
 

@@ -88,6 +88,8 @@ def test_browse_lists_one_level(client, fake):
     assert "x.zip" in html
     assert "y.img" not in html
     assert "3 items" in html
+    assert 'title="2026-01-01 00:00 UTC"' in html
+    assert " ago</div>" in html
     assert fake.listings == 1
 
 

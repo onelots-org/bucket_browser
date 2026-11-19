@@ -85,7 +85,7 @@
       <a href="{{ dl }}" target="_blank" title="{{ item.name }}">{{ item.name[path | length :] if search_param else fname }}</a>
     </div>
     <div class="file-size">{{ item.size }}</div>
-    <div class="file-date">{{ item.date_modified }}</div>
+    <div class="file-date" title="{{ item.date_modified }}">{{ item.age }}</div>
     <div class="file-action">
       <button class="dl-btn copy-btn" type="button" title="Copy S3 path" aria-label="Copy S3 path" data-s3path="s3://{{ bucket_name }}/{{ item.name }}"><svg class="ic ic-sm icon-copy"><use href="#i-copy"/></svg><svg class="ic ic-sm icon-check"><use href="#i-check"/></svg></button>
       <a href="{{ dl }}" target="_blank" class="dl-btn" title="Download" aria-label="Download"><svg class="ic ic-sm"><use href="#i-download"/></svg></a>
