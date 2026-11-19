@@ -14,46 +14,33 @@ class S3Entry:
     date_modified: str = ""
 
 
-def parse_responses(responses: list, search_param: str) -> list[S3Entry]:
-    contents: set[S3Entry] = set()
-    for response in responses:
-        # Add folders to contents
-        if isinstance(response, dict) and "CommonPrefixes" in response:
-            for item in response["CommonPrefixes"]:
-                contents.add(S3Entry(name=item["Prefix"], type="folder"))
+def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, search: str = "") -> list[S3Entry]:
+    params = {"Bucket": bucket, "Prefix": path}
+    if not search:
+        params["Delimiter"] = "/"
+    search = search.lower()
 
-        # Add files to contents
-        if isinstance(response, dict) and "Contents" in response:
-            for item in response["Contents"]:
-                if not item["Key"].endswith("/"):
-                    contents.add(
-                        S3Entry(
-                            name=item["Key"],
-                            type="file",
-                            size=humanize.naturalsize(item["Size"]),
-                            date_modified=item["LastModified"].strftime("%Y-%m-%d %H:%M UTC"),
-                        )
-                    )
+    folders: set[str] = set()
+    files: list[S3Entry] = []
+    for page in s3_client.get_paginator("list_objects_v2").paginate(**params):
+        folders.update(p["Prefix"] for p in page.get("CommonPrefixes", []))
+        for obj in page.get("Contents", []):
+            key = obj["Key"]
+            rel = key[len(path) :]
+            if search and "/" in rel:
+                folders.add(path + rel.split("/", 1)[0] + "/")
+            if key.endswith("/") or search not in key.lower():
+                continue
+            files.append(
+                S3Entry(
+                    name=key,
+                    type="file",
+                    size=humanize.naturalsize(obj["Size"]),
+                    date_modified=obj["LastModified"].strftime("%Y-%m-%d %H:%M UTC"),
+                )
+            )
 
-    contents_list = list(contents)
-    if search_param:
-        # TODO: use regex
-        contents_list = list(filter(lambda x: search_param.lower() in x.name.lower(), contents_list))
-    return sorted(contents_list, key=lambda x: (x.type == "file", x.name.lower()))
-
-
-def list_objects(
-    s3_client: botocore.client.BaseClient,
-    bucket_name: str,
-    path: str,
-    page_items: int,
-    delimiter: str = "",
-    page_token: str | None = None,
-) -> dict:
-    list_params = {"Bucket": bucket_name, "Prefix": path, "MaxKeys": page_items}
-    if delimiter:
-        list_params["Delimiter"] = "/"
-    if page_token:
-        list_params["ContinuationToken"] = page_token
-
-    return s3_client.list_objects_v2(**list_params)
+    entries = [S3Entry(name=f, type="folder") for f in folders if search in f.lower()]
+    entries.sort(key=lambda e: e.name.lower())
+    files.sort(key=lambda e: e.name.lower())
+    return entries + files
