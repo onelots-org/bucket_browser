@@ -131,6 +131,21 @@ def test_listings_are_cached(client, fake):
     assert fake.listings == 1
 
 
+def test_folder_order():
+    names = ["b/", "17/", "24.0/", "A/", "20261027/", "20261111/", "16/", "9.1/", "24.1/"]
+    assert sorted(names, key=s3.folder_order) == [
+        "20261111/",
+        "20261027/",
+        "24.1/",
+        "24.0/",
+        "17/",
+        "16/",
+        "9.1/",
+        "A/",
+        "b/",
+    ]
+
+
 def test_s3_errors(client):
     r, html = get(client, "/buckets/missing")
     assert r.status_code == 404

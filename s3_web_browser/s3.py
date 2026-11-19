@@ -33,6 +33,14 @@ def list_pages(s3_client: botocore.client.BaseClient, **params: str) -> list[dic
     return pages
 
 
+def folder_order(name: str) -> tuple:
+    base = name.rstrip("/").rsplit("/", 1)[-1]
+    parts = base.split(".")
+    if all(part.isdigit() for part in parts):
+        return (0, [-int(part) for part in parts], "")
+    return (1, [], base.lower())
+
+
 def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, search: str = "") -> list[S3Entry]:
     params = {"Bucket": bucket, "Prefix": path}
     if not search:
@@ -60,6 +68,6 @@ def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, 
             )
 
     entries = [S3Entry(name=f, type="folder") for f in folders if search in f[len(path) :].lower()]
-    entries.sort(key=lambda e: e.name.lower())
+    entries.sort(key=lambda e: folder_order(e.name))
     files.sort(key=lambda e: e.name.lower())
     return entries + files
