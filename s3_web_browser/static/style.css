@@ -226,17 +226,6 @@ header .logo:hover { color: var(--link); }
   min-width: 0;
 }
 
-@media screen and (max-width: 600px) {
-  .page { padding: 16px 16px 32px; }
-  header { padding: 0 16px; }
-  .file-table-header, .file-row {
-    grid-template-columns: 1fr 72px 64px;
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-  .file-table-header > :nth-child(3), .file-date { display: none; }
-}
-
 .file-name a {
   color: var(--text);
   text-decoration: none;
@@ -248,10 +237,6 @@ header .logo:hover { color: var(--link); }
 .file-name a:hover { color: var(--link); }
 .file-name svg { flex-shrink: 0; }
 .is-folder a::after { content: ""; position: absolute; inset: 0; }
-
-@media screen and (max-width: 600px) {
-  .file-name a { white-space: normal; overflow-wrap: anywhere; }
-}
 
 .file-size, .file-date {
   font-size: 12px;
@@ -492,13 +477,6 @@ header .logo:hover { color: var(--link); }
 .build-files a:hover { color: var(--link); }
 .build-files .build-size { margin-left: auto; white-space: nowrap; }
 
-@media screen and (max-width: 600px) {
-  .build summary { row-gap: 8px; }
-  .build summary::after { content: ""; flex-basis: 100%; }
-  .build summary .build-meta, .build summary .btn { order: 1; }
-  .build summary .build-meta { margin-right: auto; padding-left: 18px; }
-}
-
 /* ── Error card ── */
 .error-card {
   background: var(--surface);
@@ -566,6 +544,22 @@ header .logo:hover { color: var(--link); }
   animation: spin .6s linear infinite;
 }
 .btn.loading .ic { display: none; }
+
+@media screen and (max-width: 600px) {
+  .page { padding: 16px 16px 32px; }
+  header { padding: 0 16px; }
+  .file-table-header, .file-row {
+    grid-template-columns: 1fr 72px 64px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .file-table-header > :nth-child(3), .file-date { display: none; }
+  .file-name a { white-space: normal; overflow-wrap: anywhere; }
+  .build summary { row-gap: 8px; }
+  .build summary::after { content: ""; flex-basis: 100%; }
+  .build summary .build-meta, .build summary .btn { order: 1; }
+  .build summary .build-meta { margin-right: auto; padding-left: 18px; }
+}
 
 @media (pointer: coarse) {
   .dl-btn { width: 44px; height: 44px; }
