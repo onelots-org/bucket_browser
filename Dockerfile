@@ -20,4 +20,7 @@ USER nobody
 ENV PYTHONPATH=/usr/src/app
 EXPOSE 8000
 
+HEALTHCHECK --interval=30s --timeout=5s \
+    CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/static/style.css', timeout=4)"]
+
 CMD ["gunicorn", "-b", "0.0.0.0:8000", "-w", "2", "--threads", "8", "run:app"]
