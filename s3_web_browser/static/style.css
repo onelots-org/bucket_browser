@@ -204,6 +204,7 @@ header .logo:hover { color: var(--accent); }
 .file-row {
   display: grid;
   grid-template-columns: 1fr 90px 150px 68px;
+  min-height: 47px;
   padding: 9px 16px;
   align-items: center;
   border-bottom: 1px solid var(--border);
