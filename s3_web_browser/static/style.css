@@ -567,6 +567,16 @@ header .logo:hover { color: var(--link); }
 }
 .btn.loading .ic { display: none; }
 
+@media (pointer: coarse) {
+  .dl-btn { width: 44px; height: 44px; }
+  .btn, .search-bar input { height: 44px; }
+  .pagination a, .pagination .pg-current, .pagination .pg-gap { min-width: 44px; height: 44px; }
+  .file-table-header, .file-row { grid-template-columns: 1fr 90px 150px 96px; }
+}
+@media (pointer: coarse) and (max-width: 600px) {
+  .file-table-header, .file-row { grid-template-columns: 1fr 72px 92px; }
+}
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
