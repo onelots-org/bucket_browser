@@ -78,7 +78,6 @@ docker run -it --rm -p 8000:8000 --env-file .env romanzdk/s3-web-browser
 | `make test` | Run tests |
 | `make all` | Install, lint, and test |
 | `make clean` | Remove temporary files |
-| `make release VERSION=x.y.z` | Build and push Docker images |
 
 ## Related
 
