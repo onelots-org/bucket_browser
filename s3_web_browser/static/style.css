@@ -473,6 +473,12 @@ header .logo:hover { color: var(--accent); }
 }
 .btn.loading .ic { display: none; }
 
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.search-bar input:focus-visible { outline: none; }
+
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
