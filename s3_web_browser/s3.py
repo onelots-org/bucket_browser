@@ -1,4 +1,5 @@
 import dataclasses
+import time
 
 import botocore
 import humanize
@@ -14,6 +15,24 @@ class S3Entry:
     date_modified: str = ""
 
 
+LISTING_TTL = 60
+LISTING_CACHE_SIZE = 256
+_listings: dict[tuple, tuple[float, list[dict]]] = {}
+
+
+def list_pages(s3_client: botocore.client.BaseClient, **params: str) -> list[dict]:
+    key = tuple(sorted(params.items()))
+    now = time.monotonic()
+    hit = _listings.get(key)
+    if hit and now - hit[0] < LISTING_TTL:
+        return hit[1]
+    pages = list(s3_client.get_paginator("list_objects_v2").paginate(**params))
+    if len(_listings) >= LISTING_CACHE_SIZE:
+        _listings.clear()
+    _listings[key] = (now, pages)
+    return pages
+
+
 def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, search: str = "") -> list[S3Entry]:
     params = {"Bucket": bucket, "Prefix": path}
     if not search:
@@ -22,7 +41,7 @@ def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, 
 
     folders: set[str] = set()
     files: list[S3Entry] = []
-    for page in s3_client.get_paginator("list_objects_v2").paginate(**params):
+    for page in list_pages(s3_client, **params):
         folders.update(p["Prefix"] for p in page.get("CommonPrefixes", []))
         for obj in page.get("Contents", []):
             key = obj["Key"]
