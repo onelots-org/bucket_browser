@@ -54,7 +54,7 @@ def list_entries(s3_client: botocore.client.BaseClient, bucket: str, path: str, 
                 S3Entry(
                     name=key,
                     type="file",
-                    size=humanize.naturalsize(obj["Size"]),
+                    size=humanize.naturalsize(obj["Size"]).replace("Bytes", "B").replace("Byte", "B"),
                     date_modified=obj["LastModified"].strftime("%Y-%m-%d %H:%M UTC"),
                 )
             )
