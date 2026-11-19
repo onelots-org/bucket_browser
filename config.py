@@ -3,7 +3,6 @@ from typing import ClassVar
 
 
 class Config:  # noqa: D101
-    SECRET_KEY = os.getenv("SECRET_KEY", "your_default_secret_key")  # Replace with a secure key in production
     DEBUG = os.getenv("DEBUG", "").lower() in ("1", "true")
 
     AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")

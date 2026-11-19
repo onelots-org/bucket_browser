@@ -36,7 +36,6 @@ All configuration is done via environment variables (or a `.env` file):
 | `AWS_SECRET_ACCESS_KEY` | — | AWS IAM secret access key |
 | `AWS_DEFAULT_REGION` | `eu-central-1` | AWS region |
 | `AWS_ENDPOINT_URL` | — | Custom S3 endpoint (e.g. MinIO, LocalStack) |
-| `SECRET_KEY` | `your_default_secret_key` | Flask session secret key |
 | `DEBUG` | `False` | Flask debug mode |
 | `PAGE_ITEMS` | `300` | Items per page |
 
