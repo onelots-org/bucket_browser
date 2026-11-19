@@ -34,6 +34,7 @@ def register_routes(app: Flask) -> None:  # noqa:C901
         return render_template(
             "bucket_contents.html",
             contents=contents[(page - 1) * page_items : page * page_items],
+            total_items=len(contents),
             bucket_name=bucket_name,
             path=path,
             search_param=search,

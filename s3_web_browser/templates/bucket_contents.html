@@ -46,11 +46,11 @@
   {% endif %}
   {% if search_param %}
   <span class="count-badge">
-    {{ contents | length }} result{% if contents | length != 1 %}s{% endif %} for "<strong>{{ search_param }}</strong>"
+    {{ total_items }} result{% if total_items != 1 %}s{% endif %} for "<strong>{{ search_param }}</strong>"
     {% if total_pages > 1 %} &mdash; page {{ current_page }} of {{ total_pages }}{% endif %}
   </span>
   {% else %}
-  <span class="count-badge">{{ contents | length }} item{% if contents | length != 1 %}s{% endif %}{% if total_pages > 1 %} &mdash; page {{ current_page }} of {{ total_pages }}{% endif %}</span>
+  <span class="count-badge">{{ total_items }} item{% if total_items != 1 %}s{% endif %}{% if total_pages > 1 %} &mdash; page {{ current_page }} of {{ total_pages }}{% endif %}</span>
   {% endif %}
 </div>
 
